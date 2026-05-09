@@ -2,6 +2,11 @@
 
 **What every neuroimaging and neurophysiology analysis tool does, why it does it, and how to run it without Docker**
 
+
+
+[View the interactive ecosystem map](https://starborn.github.io/BIDS/ecosystem-map.html)
+
+
 Version 0.2 -- May 2026
 [W3C AIKR CG](https://www.w3.org/community/aikr/)
 
