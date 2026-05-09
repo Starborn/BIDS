@@ -4,7 +4,7 @@
 
 
 
-[View the interactive ecosystem map](https://starborn.github.io/BIDS/index.html)
+[View the interactive ecosystem map](https://starborn.github.io/BIDS)
 
 
 Version 0.2 -- May 2026
