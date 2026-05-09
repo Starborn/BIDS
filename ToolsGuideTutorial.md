@@ -6,6 +6,12 @@
 
 [View the interactive ecosystem map](https://starborn.github.io/BIDS)
 
+SEARCH THIS PAGE FOR 'MODULE SEQUENCE' TO SEE THE PLAN
+**[Jump to module sequence](#module-sequence-mri-focus-phase-1)**
+
+Module 07 (Functional Connectivity) Learning is built 
+07  Functional Connectivity    -- [Interactive module](https://starborn.github.io/BIDS/module-07-connectivity.html) [LIVE]
+
 
 Version 0.2 -- May 2026
 [W3C AIKR CG](https://www.w3.org/community/aikr/)
@@ -572,7 +578,7 @@ A browser-based learning environment where each neuroimaging analysis function c
 13  Dissimilarity Matrices     -- RSA, RDMs, condensed distance vectors
 ```
 
-Module 07 (Functional Connectivity) is built 
+Module 07 (Functional Connectivity) Learning is built 
 07  Functional Connectivity    -- [Interactive module](https://starborn.github.io/BIDS/module-07-connectivity.html) [LIVE]
 
 
