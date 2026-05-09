@@ -10,516 +10,262 @@
     padding: 20px;
     background: #0f1520;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
   }
-  svg {
-    max-width: 100%;
-    height: auto;
-  }
-  .node rect {
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-  .node:hover rect {
-    opacity: 0.8;
-  }
+  svg { max-width: 100%; height: auto; }
+  .node rect { cursor: pointer; transition: opacity 0.2s; }
+  .node:hover rect { opacity: 0.8; }
   a { text-decoration: none; }
+  .top-bar {
+    max-width: 620px; width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; padding: 12px 20px;
+    background: #141c2a; border: 1px solid #1e2a3a; border-radius: 8px;
+    font-family: 'Inter', 'Helvetica Neue', sans-serif; flex-wrap: wrap; gap: 8px;
+  }
+  .top-bar a { color: #7AACBF; font-size: 13px; text-decoration: none; transition: color 0.2s; }
+  .top-bar a:hover { color: #a0d0e4; }
+  .top-bar .sep { color: #2a3444; margin: 0 8px; }
+  .top-bar .links { font-size: 11px; }
 </style>
 </head>
 <body>
-<svg width="720" height="960" viewBox="0 0 720 960" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img">
+
+<div class="top-bar">
+  <a href="https://github.com/Starborn/BIDS/blob/main/ToolsGuideTutorial.md"><strong>Read the full Tools Guide &amp; Tutorial &#8594;</strong></a>
+  <div class="links">
+    <a href="https://github.com/ohbm/hackathon2026/issues/24">OHBM Hackathon</a>
+    <span class="sep">|</span>
+    <a href="https://bids.neuroimaging.io/">bids.neuroimaging.io</a>
+    <span class="sep">|</span>
+    <a href="https://www.w3.org/community/aikr/">W3C AIKR CG</a>
+  </div>
+</div>
+
+<svg width="620" height="940" viewBox="0 0 620 940" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img">
 <title>BIDS Tool Ecosystem Map -- All 13 Modalities</title>
-<desc>A visual map of the Brain Imaging Data Structure tool ecosystem showing 13 modalities, their converters, preprocessing pipelines, analysis tools, and browser-runnability.</desc>
+<defs><style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap');
+  text { font-family: 'Inter', 'Helvetica Neue', sans-serif; }
+  .title { font-size: 16px; font-weight: 600; fill: #e8edf4; }
+  .subtitle { font-size: 12px; fill: #8a9bb0; }
+  .th { font-size: 11px; font-weight: 600; fill: #d0d8e4; }
+  .ts { font-size: 10px; fill: #8a9bb0; }
+  .tm { font-size: 9px; fill: #5a6a7e; font-family: 'JetBrains Mono', monospace; }
+  .browser-yes { font-size: 10px; fill: #1D9E75; font-weight: 500; }
+  .browser-partial { font-size: 10px; fill: #C4A882; }
+  .mod-mri rect { fill: #1a1535; stroke: #534AB7; stroke-width: 1; }
+  .mod-mri .th { fill: #9B93E8; }
+  .mod-ephys rect { fill: #152018; stroke: #3B6D11; stroke-width: 1; }
+  .mod-ephys .th { fill: #8BC66A; }
+  .mod-imaging rect { fill: #1f1520; stroke: #8B3A6D; stroke-width: 1; }
+  .mod-imaging .th { fill: #C47AAB; }
+  .mod-signal rect { fill: #1a1a14; stroke: #6D5A11; stroke-width: 1; }
+  .mod-signal .th { fill: #C4A84E; }
+  .mod-other rect { fill: #141a1f; stroke: #3A5A6D; stroke-width: 1; }
+  .mod-other .th { fill: #7AACBF; }
+  .tool-convert rect { fill: #0f1f1f; stroke: #1D7A6A; stroke-width: 0.8; }
+  .tool-convert text { fill: #4EC4B0; }
+  .tool-qc rect { fill: #1f1510; stroke: #8B5A2A; stroke-width: 0.8; }
+  .tool-qc text { fill: #D4944A; }
+  .tool-preproc rect { fill: #10141f; stroke: #3A5A8B; stroke-width: 0.8; }
+  .tool-preproc text { fill: #6A9AD4; }
+  .tool-analysis rect { fill: #1a150f; stroke: #7A6A2A; stroke-width: 0.8; }
+  .tool-analysis text { fill: #C4B46A; }
+  .node rect { rx: 4; ry: 4; }
+  .divider { stroke: #1e2a3a; stroke-width: 0.5; }
+</style></defs>
 
-<defs>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap');
-    text { font-family: 'Inter', 'Helvetica Neue', sans-serif; }
-    .title { font-size: 16px; font-weight: 600; fill: #e8edf4; }
-    .subtitle { font-size: 10px; fill: #5a6a7e; }
-    .th { font-size: 11px; font-weight: 600; fill: #d0d8e4; }
-    .ts { font-size: 10px; fill: #8a9bb0; font-family: 'Inter', sans-serif; }
-    .tm { font-size: 9px; fill: #5a6a7e; font-family: 'JetBrains Mono', monospace; }
-    .browser-yes { font-size: 10px; fill: #1D9E75; font-weight: 500; }
-    .browser-partial { font-size: 10px; fill: #C4A882; }
-    .browser-no { font-size: 10px; fill: #8a9bb0; }
-
-    /* Modality label boxes */
-    .mod-mri rect { fill: #1a1535; stroke: #534AB7; stroke-width: 1; }
-    .mod-mri .th { fill: #9B93E8; }
-    .mod-ephys rect { fill: #152018; stroke: #3B6D11; stroke-width: 1; }
-    .mod-ephys .th { fill: #8BC66A; }
-    .mod-imaging rect { fill: #1f1520; stroke: #8B3A6D; stroke-width: 1; }
-    .mod-imaging .th { fill: #C47AAB; }
-    .mod-signal rect { fill: #1a1a14; stroke: #6D5A11; stroke-width: 1; }
-    .mod-signal .th { fill: #C4A84E; }
-    .mod-other rect { fill: #141a1f; stroke: #3A5A6D; stroke-width: 1; }
-    .mod-other .th { fill: #7AACBF; }
-
-    /* Tool boxes */
-    .tool-convert rect { fill: #0f1f1f; stroke: #1D7A6A; stroke-width: 0.8; }
-    .tool-convert text { fill: #4EC4B0; }
-    .tool-qc rect { fill: #1f1510; stroke: #8B5A2A; stroke-width: 0.8; }
-    .tool-qc text { fill: #D4944A; }
-    .tool-preproc rect { fill: #10141f; stroke: #3A5A8B; stroke-width: 0.8; }
-    .tool-preproc text { fill: #6A9AD4; }
-    .tool-analysis rect { fill: #1a150f; stroke: #7A6A2A; stroke-width: 0.8; }
-    .tool-analysis text { fill: #C4B46A; }
-
-    .node rect { rx: 4; ry: 4; }
-    .divider { stroke: #1e2a3a; stroke-width: 0.5; }
-  </style>
-</defs>
-
-<!-- Background -->
-<rect width="720" height="960" fill="#0f1520" rx="8"/>
+<rect width="620" height="940" fill="#0f1520" rx="8"/>
 
 <!-- Title -->
-<text class="title" x="360" y="32" text-anchor="middle">BIDS Tool Ecosystem -- All 13 Modalities</text>
-<text class="subtitle" x="360" y="48" text-anchor="middle">bids.neuroimaging.io | bids-specification.readthedocs.io | Awesome BIDS</text>
-
-<!-- Column headers -->
-<rect x="155" y="62" width="110" height="26" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
-<text class="th" x="210" y="79" text-anchor="middle" style="font-size:10px">Converters</text>
-
-<rect x="273" y="62" width="80" height="26" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
-<text class="th" x="313" y="79" text-anchor="middle" style="font-size:10px">QC</text>
-
-<rect x="361" y="62" width="110" height="26" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
-<text class="th" x="416" y="79" text-anchor="middle" style="font-size:10px">Preprocessing</text>
-
-<rect x="479" y="62" width="110" height="26" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
-<text class="th" x="534" y="79" text-anchor="middle" style="font-size:10px">Analysis</text>
-
-<rect x="597" y="62" width="100" height="26" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
-<text class="th" x="647" y="79" text-anchor="middle" style="font-size:10px">Browser?</text>
-
-<!-- ============================================ -->
-<!-- ROW 1: MRI -->
-<!-- ============================================ -->
-<g class="mod-mri">
-  <rect x="14" y="100" width="132" height="130" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetic-resonance-imaging-data.html">
-    <text class="th" x="80" y="124" text-anchor="middle">MRI</text>
-  </a>
-  <text class="ts" x="80" y="142" text-anchor="middle">Structural (T1w, T2w)</text>
-  <text class="ts" x="80" y="157" text-anchor="middle">Functional (BOLD)</text>
-  <text class="ts" x="80" y="172" text-anchor="middle">Diffusion (DWI)</text>
-  <text class="ts" x="80" y="187" text-anchor="middle">Perfusion (ASL)</text>
-  <text class="ts" x="80" y="202" text-anchor="middle">Quantitative, Fieldmaps</text>
-</g>
-
-<!-- MRI converters -->
-<a xlink:href="https://github.com/rordenlab/dcm2niix">
-  <g class="node tool-convert">
-    <rect x="155" y="104" width="110" height="22"/>
-    <text x="210" y="119" text-anchor="middle">dcm2niix</text>
-  </g>
-</a>
-<a xlink:href="https://github.com/nipy/heudiconv">
-  <g class="node tool-convert">
-    <rect x="155" y="130" width="110" height="22"/>
-    <text x="210" y="145" text-anchor="middle">HeuDiConv</text>
-  </g>
-</a>
-<a xlink:href="https://bidscoin.readthedocs.io/">
-  <g class="node tool-convert">
-    <rect x="155" y="156" width="110" height="22"/>
-    <text x="210" y="171" text-anchor="middle">BIDScoin</text>
-  </g>
-</a>
-<a xlink:href="https://brainlife.io/docs/using_ezBIDS/">
-  <g class="node tool-convert">
-    <rect x="155" y="182" width="110" height="22"/>
-    <text x="210" y="197" text-anchor="middle">ezBIDS (web)</text>
-  </g>
-</a>
-
-<!-- MRI QC -->
-<a xlink:href="https://mriqc.readthedocs.io/">
-  <g class="node tool-qc">
-    <rect x="273" y="104" width="80" height="28"/>
-    <text x="313" y="122" text-anchor="middle">MRIQC</text>
-  </g>
-</a>
-
-<!-- MRI preprocessing -->
-<a xlink:href="https://fmriprep.org/">
-  <g class="node tool-preproc">
-    <rect x="361" y="104" width="110" height="22"/>
-    <text x="416" y="119" text-anchor="middle">fMRIPrep</text>
-  </g>
-</a>
-<a xlink:href="https://surfer.nmr.mgh.harvard.edu/">
-  <g class="node tool-preproc">
-    <rect x="361" y="130" width="110" height="22"/>
-    <text x="416" y="145" text-anchor="middle">FreeSurfer</text>
-  </g>
-</a>
-<a xlink:href="https://github.com/Washington-University/HCPpipelines">
-  <g class="node tool-preproc">
-    <rect x="361" y="156" width="110" height="22"/>
-    <text x="416" y="171" text-anchor="middle">HCP Pipelines</text>
-  </g>
-</a>
-<a xlink:href="http://brainsuite.org/">
-  <g class="node tool-preproc">
-    <rect x="361" y="182" width="110" height="22"/>
-    <text x="416" y="197" text-anchor="middle">BrainSuite</text>
-  </g>
-</a>
-
-<!-- MRI analysis -->
-<a xlink:href="https://nilearn.github.io/">
-  <g class="node tool-analysis">
-    <rect x="479" y="104" width="110" height="22"/>
-    <text x="534" y="119" text-anchor="middle">nilearn</text>
-  </g>
-</a>
-<a xlink:href="https://www.fil.ion.ucl.ac.uk/spm/">
-  <g class="node tool-analysis">
-    <rect x="479" y="130" width="110" height="22"/>
-    <text x="534" y="145" text-anchor="middle">SPM</text>
-  </g>
-</a>
-<a xlink:href="https://www.mrtrix.org/">
-  <g class="node tool-analysis">
-    <rect x="479" y="156" width="110" height="22"/>
-    <text x="534" y="171" text-anchor="middle">MRtrix3</text>
-  </g>
-</a>
-<a xlink:href="https://github.com/SIMEXP/giga_connectome">
-  <g class="node tool-analysis">
-    <rect x="479" y="182" width="110" height="22"/>
-    <text x="534" y="197" text-anchor="middle">giga_connectome</text>
-  </g>
-</a>
-
-<!-- MRI browser -->
-<text class="browser-partial" x="647" y="130" text-anchor="middle">Partial</text>
-<text class="browser-yes" x="647" y="148" text-anchor="middle">Analysis: YES</text>
-<text class="browser-partial" x="647" y="166" text-anchor="middle">Preproc: HPC</text>
-
-<!-- Divider -->
-<line class="divider" x1="14" y1="240" x2="706" y2="240"/>
-
-<!-- ============================================ -->
-<!-- ROW 2: EEG -->
-<!-- ============================================ -->
-<g class="mod-ephys">
-  <rect x="14" y="250" width="132" height="56" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electroencephalography.html">
-    <text class="th" x="80" y="272" text-anchor="middle">EEG</text>
-  </a>
-  <text class="ts" x="80" y="290" text-anchor="middle">Scalp electrodes</text>
-</g>
-
-<a xlink:href="https://mne.tools/mne-bids/">
-  <g class="node tool-convert">
-    <rect x="155" y="254" width="110" height="22"/>
-    <text x="210" y="269" text-anchor="middle">MNE-BIDS</text>
-  </g>
-</a>
-<a xlink:href="https://eeglab.org/tutorials/04_Import/BIDS.html">
-  <g class="node tool-convert">
-    <rect x="155" y="280" width="110" height="22"/>
-    <text x="210" y="295" text-anchor="middle">EEGLAB</text>
-  </g>
-</a>
-
-<a xlink:href="https://mne.tools/">
-  <g class="node tool-preproc">
-    <rect x="361" y="254" width="110" height="22"/>
-    <text x="416" y="269" text-anchor="middle">MNE-Python</text>
-  </g>
-</a>
-<a xlink:href="https://www.fieldtriptoolbox.org/">
-  <g class="node tool-analysis">
-    <rect x="479" y="254" width="110" height="22"/>
-    <text x="534" y="269" text-anchor="middle">FieldTrip (MATLAB)</text>
-  </g>
-</a>
-
-<text class="browser-yes" x="647" y="278" text-anchor="middle">YES (MNE)</text>
-
-<!-- Divider -->
-<line class="divider" x1="14" y1="316" x2="706" y2="316"/>
-
-<!-- ============================================ -->
-<!-- ROW 3: MEG -->
-<!-- ============================================ -->
-<g class="mod-ephys">
-  <rect x="14" y="326" width="132" height="50" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetoencephalography.html">
-    <text class="th" x="80" y="346" text-anchor="middle">MEG</text>
-  </a>
-  <text class="ts" x="80" y="364" text-anchor="middle">SQUID sensors</text>
-</g>
-
-<a xlink:href="https://mne.tools/mne-bids/">
-  <g class="node tool-convert">
-    <rect x="155" y="330" width="110" height="22"/>
-    <text x="210" y="345" text-anchor="middle">MNE-BIDS</text>
-  </g>
-</a>
-<a xlink:href="https://macquarie-meg-research.github.io/Biscuit/">
-  <g class="node tool-convert">
-    <rect x="155" y="356" width="110" height="22"/>
-    <text x="210" y="371" text-anchor="middle">Biscuit</text>
-  </g>
-</a>
-
-<a xlink:href="https://mne.tools/">
-  <g class="node tool-preproc">
-    <rect x="361" y="330" width="110" height="22"/>
-    <text x="416" y="345" text-anchor="middle">MNE-Python</text>
-  </g>
-</a>
-
-<text class="browser-yes" x="647" y="352" text-anchor="middle">YES (MNE)</text>
-
-<!-- Divider -->
-<line class="divider" x1="14" y1="388" x2="706" y2="388"/>
-
-<!-- ============================================ -->
-<!-- ROW 4: iEEG -->
-<!-- ============================================ -->
-<g class="mod-ephys">
-  <rect x="14" y="398" width="132" height="44" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/intracranial-electroencephalography.html">
-    <text class="th" x="80" y="416" text-anchor="middle">iEEG</text>
-  </a>
-  <text class="ts" x="80" y="432" text-anchor="middle">Implanted electrodes</text>
-</g>
-
-<a xlink:href="https://mne.tools/mne-bids/">
-  <g class="node tool-convert">
-    <rect x="155" y="404" width="110" height="22"/>
-    <text x="210" y="419" text-anchor="middle">MNE-BIDS</text>
-  </g>
-</a>
-<a xlink:href="https://mne.tools/">
-  <g class="node tool-analysis">
-    <rect x="479" y="404" width="110" height="22"/>
-    <text x="534" y="419" text-anchor="middle">MNE-Python</text>
-  </g>
-</a>
-
-<text class="browser-yes" x="647" y="422" text-anchor="middle">YES</text>
-
-<!-- Divider -->
-<line class="divider" x1="14" y1="452" x2="706" y2="452"/>
-
-<!-- ============================================ -->
-<!-- ROW 5: PET -->
-<!-- ============================================ -->
-<g class="mod-imaging">
-  <rect x="14" y="462" width="132" height="44" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/positron-emission-tomography.html">
-    <text class="th" x="80" y="480" text-anchor="middle">PET</text>
-  </a>
-  <text class="ts" x="80" y="496" text-anchor="middle">Radiotracer decay</text>
-</g>
-
-<g class="node tool-convert">
-  <rect x="155" y="470" width="110" height="22"/>
-  <text x="210" y="485" text-anchor="middle">DICOM converters</text>
-</g>
-
-<a xlink:href="https://surfer.nmr.mgh.harvard.edu/fswiki/PetSurfer">
-  <g class="node tool-analysis">
-    <rect x="479" y="470" width="110" height="22"/>
-    <text x="534" y="485" text-anchor="middle">PETSurfer</text>
-  </g>
-</a>
-
-<text class="browser-partial" x="647" y="486" text-anchor="middle">Partial</text>
-
-<!-- Divider -->
-<line class="divider" x1="14" y1="516" x2="706" y2="516"/>
-
-<!-- ============================================ -->
-<!-- ROW 6: fNIRS -->
-<!-- ============================================ -->
-<g class="mod-imaging">
-  <rect x="14" y="526" width="132" height="44" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/near-infrared-spectroscopy.html">
-    <text class="th" x="80" y="544" text-anchor="middle">fNIRS</text>
-  </a>
-  <text class="ts" x="80" y="560" text-anchor="middle">Near-infrared light</text>
-</g>
-
-<a xlink:href="https://mne.tools/mne-bids/">
-  <g class="node tool-convert">
-    <rect x="155" y="534" width="110" height="22"/>
-    <text x="210" y="549" text-anchor="middle">MNE-BIDS</text>
-  </g>
-</a>
-<a xlink:href="https://mne.tools/mne-nirs/">
-  <g class="node tool-preproc">
-    <rect x="361" y="534" width="110" height="22"/>
-    <text x="416" y="549" text-anchor="middle">MNE-NIRS</text>
-  </g>
-</a>
-
-<text class="browser-yes" x="647" y="550" text-anchor="middle">YES</text>
-
-<!-- Divider -->
-<line class="divider" x1="14" y1="580" x2="706" y2="580"/>
-
-<!-- ============================================ -->
-<!-- ROW 7: MRS -->
-<!-- ============================================ -->
-<g class="mod-imaging">
-  <rect x="14" y="590" width="132" height="44" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetic-resonance-spectroscopy.html">
-    <text class="th" x="80" y="608" text-anchor="middle">MRS</text>
-  </a>
-  <text class="ts" x="80" y="624" text-anchor="middle">Chemical spectra</text>
-</g>
-
-<a xlink:href="https://github.com/wtclarke/spec2nii">
-  <g class="node tool-convert">
-    <rect x="155" y="598" width="110" height="22"/>
-    <text x="210" y="613" text-anchor="middle">spec2nii</text>
-  </g>
-</a>
-<a xlink:href="https://open.win.ox.ac.uk/pages/fsl/fsl_mrs/">
-  <g class="node tool-analysis">
-    <rect x="479" y="598" width="110" height="22"/>
-    <text x="534" y="613" text-anchor="middle">FSL-MRS</text>
-  </g>
-</a>
-
-<text class="browser-yes" x="647" y="614" text-anchor="middle">YES</text>
-
-<!-- Divider -->
-<line class="divider" x1="14" y1="644" x2="706" y2="644"/>
-
-<!-- ============================================ -->
-<!-- ROW 8: Microscopy -->
-<!-- ============================================ -->
-<g class="mod-imaging">
-  <rect x="14" y="654" width="132" height="36" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/microscopy.html">
-    <text class="th" x="80" y="676" text-anchor="middle">Microscopy</text>
-  </a>
-</g>
-<text class="ts" x="340" y="676" text-anchor="middle">Emerging tool ecosystem (optical, electron, micro-CT)</text>
-<text class="browser-partial" x="647" y="676" text-anchor="middle">Partial</text>
-
-<!-- Divider -->
-<line class="divider" x1="14" y1="700" x2="706" y2="700"/>
-
-<!-- ============================================ -->
-<!-- ROW 9: Motion -->
-<!-- ============================================ -->
-<g class="mod-signal">
-  <rect x="14" y="710" width="132" height="36" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/motion.html">
-    <text class="th" x="80" y="732" text-anchor="middle">Motion</text>
-  </a>
-</g>
-<text class="ts" x="340" y="732" text-anchor="middle">IMU / optical motion capture</text>
-<text class="browser-yes" x="647" y="732" text-anchor="middle">YES</text>
-
-<!-- ============================================ -->
-<!-- ROW 10: EMG -->
-<!-- ============================================ -->
-<g class="mod-signal">
-  <rect x="14" y="756" width="132" height="36" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electromyography.html">
-    <text class="th" x="80" y="778" text-anchor="middle">EMG</text>
-  </a>
-</g>
-<a xlink:href="https://mne.tools/mne-bids/">
-  <g class="node tool-convert">
-    <rect x="155" y="762" width="110" height="22"/>
-    <text x="210" y="777" text-anchor="middle">MNE-BIDS</text>
-  </g>
-</a>
-<a xlink:href="https://mne.tools/">
-  <g class="node tool-analysis">
-    <rect x="479" y="762" width="110" height="22"/>
-    <text x="534" y="777" text-anchor="middle">MNE-Python</text>
-  </g>
-</a>
-<text class="browser-yes" x="647" y="778" text-anchor="middle">YES</text>
-
-<!-- ============================================ -->
-<!-- ROW 11: Physiological -->
-<!-- ============================================ -->
-<g class="mod-signal">
-  <rect x="14" y="802" width="132" height="36" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/physiological-recordings.html">
-    <text class="th" x="80" y="824" text-anchor="middle">Physiological</text>
-  </a>
-</g>
-<a xlink:href="https://phys2bids.readthedocs.io/">
-  <g class="node tool-convert">
-    <rect x="155" y="808" width="110" height="22"/>
-    <text x="210" y="823" text-anchor="middle">phys2bids</text>
-  </g>
-</a>
-<text class="ts" x="416" y="824" text-anchor="middle">Signal processing</text>
-<text class="browser-yes" x="647" y="824" text-anchor="middle">YES</text>
-
-<!-- ============================================ -->
-<!-- ROW 12: Behavioral -->
-<!-- ============================================ -->
-<g class="mod-other">
-  <rect x="14" y="848" width="132" height="36" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/behavioral-experiments.html">
-    <text class="th" x="80" y="870" text-anchor="middle">Behavioral</text>
-  </a>
-</g>
-<a xlink:href="https://github.com/psych-ds/psychopy-bids">
-  <g class="node tool-convert">
-    <rect x="155" y="854" width="110" height="22"/>
-    <text x="210" y="869" text-anchor="middle">psychopy-bids</text>
-  </g>
-</a>
-<text class="ts" x="416" y="870" text-anchor="middle">Statistical analysis</text>
-<text class="browser-yes" x="647" y="870" text-anchor="middle">YES</text>
-
-<!-- ============================================ -->
-<!-- ROW 13: Genetic -->
-<!-- ============================================ -->
-<g class="mod-other">
-  <rect x="14" y="894" width="132" height="36" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/genetic-descriptor.html">
-    <text class="th" x="80" y="916" text-anchor="middle">Genetic Descriptor</text>
-  </a>
-</g>
-<text class="ts" x="340" y="916" text-anchor="middle">Metadata framework -- links genomic data to imaging datasets</text>
-
-<!-- ============================================ -->
-<!-- Footer: shared tools -->
-<!-- ============================================ -->
-<line class="divider" x1="14" y1="940" x2="706" y2="940"/>
-<text class="tm" x="360" y="955" text-anchor="middle">
-  Shared across all modalities: BIDS Validator (browser) | PyBIDS | nibabel | nipype | OpenNeuro (1000+ datasets)
-</text>
+<text class="title" x="310" y="28" text-anchor="middle">BIDS Tool Ecosystem -- All 13 Modalities</text>
+<text class="subtitle" x="310" y="46" text-anchor="middle">What each tool does, which modality it serves, and whether it runs in a browser</text>
 
 <!-- Color legend -->
-<rect x="14" y="62" width="10" height="10" rx="2" fill="#1a1535" stroke="#534AB7" stroke-width="1"/>
-<text class="tm" x="28" y="71">MRI</text>
-<rect x="52" y="62" width="10" height="10" rx="2" fill="#152018" stroke="#3B6D11" stroke-width="1"/>
-<text class="tm" x="66" y="71">Electrophys</text>
-<rect x="110" y="62" width="10" height="10" rx="2" fill="#1f1520" stroke="#8B3A6D" stroke-width="1"/>
-<text class="tm" x="124" y="71">Imaging</text>
+<rect x="70" y="58" width="10" height="10" rx="2" fill="#1a1535" stroke="#534AB7" stroke-width="1"/>
+<text class="ts" x="84" y="67">MRI</text>
+<rect x="120" y="58" width="10" height="10" rx="2" fill="#152018" stroke="#3B6D11" stroke-width="1"/>
+<text class="ts" x="134" y="67">Electrophysiology</text>
+<rect x="250" y="58" width="10" height="10" rx="2" fill="#1f1520" stroke="#8B3A6D" stroke-width="1"/>
+<text class="ts" x="264" y="67">Imaging</text>
+<rect x="320" y="58" width="10" height="10" rx="2" fill="#1a1a14" stroke="#6D5A11" stroke-width="1"/>
+<text class="ts" x="334" y="67">Signal / Motion</text>
+<rect x="430" y="58" width="10" height="10" rx="2" fill="#141a1f" stroke="#3A5A6D" stroke-width="1"/>
+<text class="ts" x="444" y="67">Other</text>
+
+<!-- Column headers -->
+<rect x="150" y="80" width="105" height="22" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
+<text class="th" x="202" y="95" text-anchor="middle" style="font-size:10px">Converters</text>
+<rect x="261" y="80" width="72" height="22" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
+<text class="th" x="297" y="95" text-anchor="middle" style="font-size:10px">QC</text>
+<rect x="339" y="80" width="105" height="22" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
+<text class="th" x="391" y="95" text-anchor="middle" style="font-size:10px">Preprocessing</text>
+<rect x="450" y="80" width="105" height="22" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
+<text class="th" x="502" y="95" text-anchor="middle" style="font-size:10px">Analysis</text>
+<text class="th" x="578" y="95" text-anchor="middle" style="font-size:9px;fill:#5a6a7e">Browser?</text>
+
+<!-- ROW 1: MRI -->
+<g class="mod-mri">
+  <rect x="12" y="112" width="130" height="126" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetic-resonance-imaging-data.html"><text class="th" x="77" y="134" text-anchor="middle">MRI</text></a>
+  <text class="ts" x="77" y="150" text-anchor="middle">Structural (T1w, T2w)</text>
+  <text class="ts" x="77" y="164" text-anchor="middle">Functional (BOLD)</text>
+  <text class="ts" x="77" y="178" text-anchor="middle">Diffusion (DWI)</text>
+  <text class="ts" x="77" y="192" text-anchor="middle">Perfusion (ASL)</text>
+  <text class="ts" x="77" y="206" text-anchor="middle">Quantitative</text>
+</g>
+<a xlink:href="https://github.com/rordenlab/dcm2niix"><g class="node tool-convert"><rect x="150" y="114" width="105" height="21"/><text x="202" y="128" text-anchor="middle">dcm2niix</text></g></a>
+<a xlink:href="https://github.com/nipy/heudiconv"><g class="node tool-convert"><rect x="150" y="139" width="105" height="21"/><text x="202" y="153" text-anchor="middle">HeuDiConv</text></g></a>
+<a xlink:href="https://bidscoin.readthedocs.io/"><g class="node tool-convert"><rect x="150" y="164" width="105" height="21"/><text x="202" y="178" text-anchor="middle">BIDScoin</text></g></a>
+<a xlink:href="https://brainlife.io/docs/using_ezBIDS/"><g class="node tool-convert"><rect x="150" y="189" width="105" height="21"/><text x="202" y="203" text-anchor="middle">ezBIDS (web)</text></g></a>
+<a xlink:href="https://mriqc.readthedocs.io/"><g class="node tool-qc"><rect x="261" y="114" width="72" height="26"/><text x="297" y="131" text-anchor="middle">MRIQC</text></g></a>
+<a xlink:href="https://fmriprep.org/"><g class="node tool-preproc"><rect x="339" y="114" width="105" height="21"/><text x="391" y="128" text-anchor="middle">fMRIPrep</text></g></a>
+<a xlink:href="https://surfer.nmr.mgh.harvard.edu/"><g class="node tool-preproc"><rect x="339" y="139" width="105" height="21"/><text x="391" y="153" text-anchor="middle">FreeSurfer</text></g></a>
+<a xlink:href="https://github.com/Washington-University/HCPpipelines"><g class="node tool-preproc"><rect x="339" y="164" width="105" height="21"/><text x="391" y="178" text-anchor="middle">HCP Pipelines</text></g></a>
+<a xlink:href="http://brainsuite.org/"><g class="node tool-preproc"><rect x="339" y="189" width="105" height="21"/><text x="391" y="203" text-anchor="middle">BrainSuite</text></g></a>
+<a xlink:href="https://nilearn.github.io/"><g class="node tool-analysis"><rect x="450" y="114" width="105" height="21"/><text x="502" y="128" text-anchor="middle">nilearn</text></g></a>
+<a xlink:href="https://www.fil.ion.ucl.ac.uk/spm/"><g class="node tool-analysis"><rect x="450" y="139" width="105" height="21"/><text x="502" y="153" text-anchor="middle">SPM</text></g></a>
+<a xlink:href="https://www.mrtrix.org/"><g class="node tool-analysis"><rect x="450" y="164" width="105" height="21"/><text x="502" y="178" text-anchor="middle">MRtrix3</text></g></a>
+<a xlink:href="https://github.com/SIMEXP/giga_connectome"><g class="node tool-analysis"><rect x="450" y="189" width="105" height="21"/><text x="502" y="203" text-anchor="middle">giga_connectome</text></g></a>
+<text class="browser-partial" x="578" y="142" text-anchor="middle">Partial</text>
+<text class="browser-yes" x="578" y="158" text-anchor="middle">Analysis: YES</text>
+<text class="browser-partial" x="578" y="174" text-anchor="middle">Preproc: HPC</text>
+
+<line class="divider" x1="12" y1="248" x2="608" y2="248"/>
+
+<!-- ROW 2: EEG -->
+<g class="mod-ephys">
+  <rect x="12" y="258" width="130" height="50" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electroencephalography.html"><text class="th" x="77" y="278" text-anchor="middle">EEG</text></a>
+  <text class="ts" x="77" y="294" text-anchor="middle">Scalp electrodes</text>
+</g>
+<a xlink:href="https://mne.tools/mne-bids/"><g class="node tool-convert"><rect x="150" y="262" width="105" height="21"/><text x="202" y="276" text-anchor="middle">MNE-BIDS</text></g></a>
+<a xlink:href="https://eeglab.org/tutorials/04_Import/BIDS.html"><g class="node tool-convert"><rect x="150" y="287" width="105" height="21"/><text x="202" y="301" text-anchor="middle">EEGLAB</text></g></a>
+<a xlink:href="https://mne.tools/"><g class="node tool-preproc"><rect x="339" y="262" width="105" height="21"/><text x="391" y="276" text-anchor="middle">MNE-Python</text></g></a>
+<a xlink:href="https://www.fieldtriptoolbox.org/"><g class="node tool-analysis"><rect x="450" y="262" width="105" height="21"/><text x="502" y="276" text-anchor="middle">FieldTrip</text></g></a>
+<text class="browser-yes" x="578" y="284" text-anchor="middle">YES (MNE)</text>
+
+<line class="divider" x1="12" y1="318" x2="608" y2="318"/>
+
+<!-- ROW 3: MEG -->
+<g class="mod-ephys">
+  <rect x="12" y="328" width="130" height="48" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetoencephalography.html"><text class="th" x="77" y="348" text-anchor="middle">MEG</text></a>
+  <text class="ts" x="77" y="364" text-anchor="middle">SQUID sensors</text>
+</g>
+<a xlink:href="https://mne.tools/mne-bids/"><g class="node tool-convert"><rect x="150" y="332" width="105" height="21"/><text x="202" y="346" text-anchor="middle">MNE-BIDS</text></g></a>
+<a xlink:href="https://macquarie-meg-research.github.io/Biscuit/"><g class="node tool-convert"><rect x="150" y="357" width="105" height="21"/><text x="202" y="371" text-anchor="middle">Biscuit</text></g></a>
+<a xlink:href="https://mne.tools/"><g class="node tool-preproc"><rect x="339" y="332" width="105" height="21"/><text x="391" y="346" text-anchor="middle">MNE-Python</text></g></a>
+<text class="browser-yes" x="578" y="354" text-anchor="middle">YES (MNE)</text>
+
+<line class="divider" x1="12" y1="386" x2="608" y2="386"/>
+
+<!-- ROW 4: iEEG -->
+<g class="mod-ephys">
+  <rect x="12" y="396" width="130" height="38" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/intracranial-electroencephalography.html"><text class="th" x="77" y="416" text-anchor="middle">iEEG</text></a>
+  <text class="ts" x="77" y="430" text-anchor="middle">Implanted electrodes</text>
+</g>
+<a xlink:href="https://mne.tools/mne-bids/"><g class="node tool-convert"><rect x="150" y="402" width="105" height="21"/><text x="202" y="416" text-anchor="middle">MNE-BIDS</text></g></a>
+<a xlink:href="https://mne.tools/"><g class="node tool-analysis"><rect x="450" y="402" width="105" height="21"/><text x="502" y="416" text-anchor="middle">MNE-Python</text></g></a>
+<text class="browser-yes" x="578" y="418" text-anchor="middle">YES</text>
+
+<line class="divider" x1="12" y1="444" x2="608" y2="444"/>
+
+<!-- ROW 5: PET -->
+<g class="mod-imaging">
+  <rect x="12" y="454" width="130" height="38" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/positron-emission-tomography.html"><text class="th" x="77" y="474" text-anchor="middle">PET</text></a>
+  <text class="ts" x="77" y="488" text-anchor="middle">Radiotracer decay</text>
+</g>
+<g class="node tool-convert"><rect x="150" y="462" width="105" height="21"/><text x="202" y="476" text-anchor="middle">DICOM converters</text></g>
+<a xlink:href="https://surfer.nmr.mgh.harvard.edu/fswiki/PetSurfer"><g class="node tool-analysis"><rect x="450" y="462" width="105" height="21"/><text x="502" y="476" text-anchor="middle">PETSurfer</text></g></a>
+<text class="browser-partial" x="578" y="478" text-anchor="middle">Partial</text>
+
+<line class="divider" x1="12" y1="502" x2="608" y2="502"/>
+
+<!-- ROW 6: fNIRS -->
+<g class="mod-imaging">
+  <rect x="12" y="512" width="130" height="38" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/near-infrared-spectroscopy.html"><text class="th" x="77" y="532" text-anchor="middle">fNIRS</text></a>
+  <text class="ts" x="77" y="546" text-anchor="middle">Near-infrared light</text>
+</g>
+<a xlink:href="https://mne.tools/mne-bids/"><g class="node tool-convert"><rect x="150" y="520" width="105" height="21"/><text x="202" y="534" text-anchor="middle">MNE-BIDS</text></g></a>
+<a xlink:href="https://mne.tools/mne-nirs/"><g class="node tool-preproc"><rect x="339" y="520" width="105" height="21"/><text x="391" y="534" text-anchor="middle">MNE-NIRS</text></g></a>
+<text class="browser-yes" x="578" y="536" text-anchor="middle">YES</text>
+
+<line class="divider" x1="12" y1="560" x2="608" y2="560"/>
+
+<!-- ROW 7: MRS -->
+<g class="mod-imaging">
+  <rect x="12" y="570" width="130" height="38" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetic-resonance-spectroscopy.html"><text class="th" x="77" y="590" text-anchor="middle">MRS</text></a>
+  <text class="ts" x="77" y="604" text-anchor="middle">Chemical spectra</text>
+</g>
+<a xlink:href="https://github.com/wtclarke/spec2nii"><g class="node tool-convert"><rect x="150" y="578" width="105" height="21"/><text x="202" y="592" text-anchor="middle">spec2nii</text></g></a>
+<a xlink:href="https://open.win.ox.ac.uk/pages/fsl/fsl_mrs/"><g class="node tool-analysis"><rect x="450" y="578" width="105" height="21"/><text x="502" y="592" text-anchor="middle">FSL-MRS</text></g></a>
+<text class="browser-yes" x="578" y="594" text-anchor="middle">YES</text>
+
+<line class="divider" x1="12" y1="618" x2="608" y2="618"/>
+
+<!-- ROW 8: Microscopy -->
+<g class="mod-imaging">
+  <rect x="12" y="628" width="130" height="32" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/microscopy.html"><text class="th" x="77" y="648" text-anchor="middle">Microscopy</text></a>
+</g>
+<text class="ts" x="350" y="648" text-anchor="middle">Emerging tool ecosystem</text>
+<text class="browser-partial" x="578" y="648" text-anchor="middle">Partial</text>
+
+<line class="divider" x1="12" y1="670" x2="608" y2="670"/>
+
+<!-- ROW 9: Motion -->
+<g class="mod-signal">
+  <rect x="12" y="680" width="130" height="32" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/motion.html"><text class="th" x="77" y="700" text-anchor="middle">Motion</text></a>
+</g>
+<text class="ts" x="350" y="700" text-anchor="middle">IMU / optical motion capture</text>
+<text class="browser-yes" x="578" y="700" text-anchor="middle">YES</text>
+
+<!-- ROW 10: EMG -->
+<g class="mod-signal">
+  <rect x="12" y="722" width="130" height="32" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electromyography.html"><text class="th" x="77" y="742" text-anchor="middle">EMG</text></a>
+</g>
+<a xlink:href="https://mne.tools/mne-bids/"><g class="node tool-convert"><rect x="150" y="728" width="105" height="21"/><text x="202" y="742" text-anchor="middle">MNE-BIDS</text></g></a>
+<a xlink:href="https://mne.tools/"><g class="node tool-analysis"><rect x="450" y="728" width="105" height="21"/><text x="502" y="742" text-anchor="middle">MNE-Python</text></g></a>
+<text class="browser-yes" x="578" y="742" text-anchor="middle">YES</text>
+
+<!-- ROW 11: Physiological -->
+<g class="mod-signal">
+  <rect x="12" y="764" width="130" height="32" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/physiological-recordings.html"><text class="th" x="77" y="784" text-anchor="middle">Physiological</text></a>
+</g>
+<a xlink:href="https://phys2bids.readthedocs.io/"><g class="node tool-convert"><rect x="150" y="770" width="105" height="21"/><text x="202" y="784" text-anchor="middle">phys2bids</text></g></a>
+<text class="ts" x="391" y="784" text-anchor="middle">Signal processing</text>
+<text class="browser-yes" x="578" y="784" text-anchor="middle">YES</text>
+
+<!-- ROW 12: Behavioral -->
+<g class="mod-other">
+  <rect x="12" y="806" width="130" height="32" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/behavioral-experiments.html"><text class="th" x="77" y="826" text-anchor="middle">Behavioral</text></a>
+</g>
+<a xlink:href="https://github.com/psych-ds/psychopy-bids"><g class="node tool-convert"><rect x="150" y="812" width="105" height="21"/><text x="202" y="826" text-anchor="middle">psychopy-bids</text></g></a>
+<text class="ts" x="391" y="826" text-anchor="middle">Statistical analysis</text>
+<text class="browser-yes" x="578" y="826" text-anchor="middle">YES</text>
+
+<!-- ROW 13: Genetic -->
+<g class="mod-other">
+  <rect x="12" y="848" width="130" height="32" rx="8"/>
+  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/genetic-descriptor.html"><text class="th" x="77" y="868" text-anchor="middle">Genetic Descriptor</text></a>
+</g>
+<text class="ts" x="350" y="868" text-anchor="middle">Metadata framework -- links genomic data to imaging</text>
+
+<!-- Footer -->
+<line class="divider" x1="12" y1="892" x2="608" y2="892"/>
+<text class="tm" x="310" y="907" text-anchor="middle">Shared: BIDS Validator (browser) | PyBIDS | nibabel | nipype | OpenNeuro (1000+ datasets)</text>
 
 </svg>
-  <div style="text-align: center; margin-top: 24px; font-family: 'Inter', sans-serif;">
-  <a href="https://github.com/Starborn/BIDS/blob/main/ToolsGuideTutorial.md" 
-     style="color: #7AACBF; font-size: 14px; text-decoration: none; border: 1px solid #1e2a3a; padding: 10px 20px; border-radius: 6px; display: inline-block;">
-    Read the full Tools Guide &amp; Tutorial →
-  </a>
-  <p style="color: #5a6a7e; font-size: 11px; margin-top: 12px;">
-    BIDS Academy -- <a href="https://github.com/ohbm/hackathon2026/issues/24" style="color: #5a6a7e;">OHBM Hackathon 2026</a> | 
-    <a href="https://bids.neuroimaging.io/" style="color: #5a6a7e;">bids.neuroimaging.io</a> | 
-    <a href="https://www.w3.org/community/aikr/" style="color: #5a6a7e;">W3C AIKR CG</a>
-  </p>
-</div>
 </body>
 </html>
