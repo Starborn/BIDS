@@ -3,269 +3,652 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BIDS Tool Ecosystem Map</title>
+<title>BIDS Academy -- Module 07: Functional Connectivity</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
-    margin: 0;
-    padding: 20px;
     background: #0f1520;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    color: #d0d8e4;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
   }
-  svg { max-width: 100%; height: auto; }
-  .node rect { cursor: pointer; transition: opacity 0.2s; }
-  .node:hover rect { opacity: 0.8; }
-  a { text-decoration: none; }
-  .top-bar {
-    max-width: 620px; width: 100%;
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 16px; padding: 12px 20px;
-    background: #141c2a; border: 1px solid #1e2a3a; border-radius: 8px;
-    font-family: 'Inter', 'Helvetica Neue', sans-serif; flex-wrap: wrap; gap: 8px;
+
+  .grid-bg {
+    position: fixed; inset: 0; opacity: 0.03; pointer-events: none;
+    background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+    background-size: 24px 24px;
   }
-  .top-bar a { color: #7AACBF; font-size: 13px; text-decoration: none; transition: color 0.2s; }
-  .top-bar a:hover { color: #a0d0e4; }
-  .top-bar .sep { color: #2a3444; margin: 0 8px; }
-  .top-bar .links { font-size: 11px; }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; position: relative; }
+
+  .badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .badge-primary { color: #E8927C; }
+  .badge-secondary { color: #5a6a7e; letter-spacing: 0.08em; }
+
+  h1 {
+    font-family: 'Playfair Display', serif; font-weight: 600; font-size: 36px;
+    color: #e8edf4; margin: 0 0 8px 0; line-height: 1.2;
+  }
+
+  .lead { font-size: 15px; color: #6a7a8e; max-width: 600px; line-height: 1.6; }
+
+  /* Step buttons */
+  .steps { display: flex; gap: 8px; margin: 28px 0; flex-wrap: wrap; }
+  .step-btn {
+    padding: 10px 16px; border: 1px solid #2a3444; background: transparent;
+    color: #8a9bb0; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; transition: all 0.25s ease; border-radius: 6px;
+  }
+  .step-btn:hover { border-color: #4a5a6e; color: #d0d8e4; }
+  .step-btn.active { border-color: #E8927C; color: #E8927C; background: rgba(232, 146, 124, 0.08); }
+
+  /* Panels */
+  .panel {
+    background: #141c2a; border-radius: 10px; padding: 24px;
+    border: 1px solid #1e2a3a;
+  }
+
+  .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
+
+  .right-stack { display: flex; flex-direction: column; gap: 16px; }
+
+  h3 {
+    font-family: 'Playfair Display', serif; font-size: 18px; color: #e8edf4;
+    margin: 0 0 12px 0; font-weight: 600;
+  }
+
+  .science-text { font-size: 13.5px; line-height: 1.7; color: #9aabb8; margin: 0 0 16px 0; }
+
+  .section-label {
+    font-size: 11px; color: #5a6a7e; margin-bottom: 6px;
+    font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;
+  }
+
+  .math-block {
+    background: #141c2a; border-left: 3px solid #C4A882; border-radius: 0 6px 6px 0;
+    padding: 14px 18px; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; line-height: 1.7; color: #C4A882; white-space: pre-wrap;
+  }
+
+  pre.code-block {
+    background: #141c2a; border: 1px solid #1e2a3a; border-radius: 6px;
+    padding: 14px 18px; font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px; line-height: 1.6; color: #9CB89C; overflow-x: auto; margin: 0;
+  }
+
+  .toggle-btn {
+    padding: 6px 14px; border: 1px solid #2a3444; background: transparent;
+    color: #8a9bb0; cursor: pointer; font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; border-radius: 4px; transition: all 0.2s;
+  }
+  .toggle-btn.on { border-color: #9CB89C; color: #9CB89C; background: rgba(156, 184, 156, 0.1); }
+
+  .control-slider {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 4px;
+    background: #2a3444; border-radius: 2px; outline: none;
+  }
+  .control-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 14px; height: 14px;
+    background: #E8927C; border-radius: 50%; cursor: pointer;
+  }
+
+  .cell-info {
+    background: #0f1520; border-radius: 6px; padding: 12px;
+    border: 1px solid #1e2a3a; margin-bottom: 16px;
+  }
+  .cell-info .label { font-size: 11px; color: #5a6a7e; margin-bottom: 4px; }
+  .cell-info .value { font-size: 14px; color: #e8edf4; font-family: 'JetBrains Mono', monospace; }
+
+  .color-legend {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+  }
+  .color-bar {
+    flex: 1; height: 8px; border-radius: 4px; max-width: 200px;
+    background: linear-gradient(90deg, #547fbf, #282832, #e89264);
+  }
+  .color-label { font-size: 10px; color: #5a6a7e; font-family: 'JetBrains Mono', monospace; }
+
+  .rdm-panel { margin-top: 24px; }
+  .rdm-grid { display: flex; gap: 24px; align-items: flex-start; }
+  @media (max-width: 768px) { .rdm-grid { flex-direction: column; } }
+  .rdm-text { flex: 1; }
+  .rdm-text h3 { font-size: 16px; }
+  .rdm-text p { font-size: 13px; line-height: 1.7; color: #8a9bb0; }
+  .rdm-box {
+    min-width: 180px; background: #0f1520; border-radius: 8px; padding: 16px;
+    border: 1px solid #1e2a3a; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  }
+
+  .control-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .control-label { font-size: 12px; color: #8a9bb0; }
+  .control-value { font-size: 12px; color: #E8927C; font-family: 'JetBrains Mono', monospace; }
+  .control-hint { font-size: 10px; color: #4a5a6e; margin-top: 4px; }
+
+  footer {
+    margin-top: 32px; padding-top: 20px; border-top: 1px solid #1e2a3a;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+  }
+  footer span { font-size: 11px; color: #4a5a6e; }
+  footer a { color: #5a6a7e; text-decoration: none; }
+  footer a:hover { color: #7AACBF; }
+
+  .glossary { margin-top: 24px; }
+  .glossary h3 { margin-bottom: 16px; }
+  .glossary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 768px) { .glossary-grid { grid-template-columns: 1fr; } }
+  .glossary-item { background: #0f1520; border-radius: 6px; padding: 12px; border: 1px solid #1e2a3a; }
+  .glossary-term {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: #E8927C; margin-bottom: 4px; font-weight: 500;
+  }
+  .glossary-def { font-size: 12px; color: #8a9bb0; line-height: 1.5; }
 </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <a href="https://github.com/Starborn/BIDS/blob/main/ToolsGuideTutorial.md"><strong>Read the full Tools Guide &amp; Tutorial &#8594;</strong></a>
-  <div class="links">
-    <a href="https://github.com/ohbm/hackathon2026/issues/24">OHBM Hackathon</a>
-    <span class="sep">|</span>
-    <a href="https://bids.neuroimaging.io/">bids.neuroimaging.io</a>
-    <span class="sep">|</span>
-    <a href="https://www.w3.org/community/aikr/">W3C AIKR CG</a>
+<div class="grid-bg"></div>
+
+<div class="container">
+  <!-- Header -->
+  <header>
+    <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px;">
+      <span class="badge badge-primary">BIDS Academy</span>
+      <span style="color:#2a3444">|</span>
+      <span class="badge badge-secondary">Module 07</span>
+    </div>
+    <h1>Functional Connectivity</h1>
+    <p class="lead">How correlated brain activity reveals the architecture of neural networks -- from raw time series to dissimilarity matrices.</p>
+  </header>
+
+  <!-- Step nav -->
+  <nav class="steps" id="stepNav"></nav>
+
+  <!-- Main content -->
+  <div class="main-grid">
+    <!-- Left: Visualization -->
+    <div class="panel">
+      <canvas id="heatmap" width="340" height="340" style="cursor:crosshair;margin-bottom:12px;"></canvas>
+      <div class="color-legend">
+        <span class="color-label">-1</span>
+        <div class="color-bar"></div>
+        <span class="color-label">+1</span>
+        <span class="color-label" id="scaleLabel" style="margin-left:8px">Pearson r</span>
+      </div>
+      <div class="cell-info">
+        <div class="label">Selected pair</div>
+        <div class="value" id="cellInfo">V1 &#8596; mPFC -- 0.0000</div>
+      </div>
+      <canvas id="tsPlot" width="400" height="130"></canvas>
+    </div>
+
+    <!-- Right: Explanation + controls -->
+    <div class="right-stack">
+      <div class="panel">
+        <h3 id="stepTitle"></h3>
+        <p class="science-text" id="stepScience"></p>
+        <div class="section-label">THE MATH</div>
+        <div class="math-block" id="stepMath"></div>
+      </div>
+
+      <div class="panel" style="padding:16px 24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="section-label">Python / nilearn</span>
+          <button class="toggle-btn" id="codeToggle" onclick="toggleCode()">show code</button>
+        </div>
+        <pre class="code-block" id="codeBlock" style="display:none;margin-top:12px;"></pre>
+      </div>
+
+      <div class="panel" style="padding:20px;">
+        <div class="section-label" style="margin-bottom:14px;">PARAMETERS</div>
+        <div style="margin-bottom:16px;">
+          <div class="control-row">
+            <span class="control-label">Time points (TRs)</span>
+            <span class="control-value" id="tpValue">100</span>
+          </div>
+          <input type="range" class="control-slider" id="tpSlider" min="20" max="500" value="100" oninput="updateParams()">
+          <div class="control-hint">More time points = more stable correlations (law of large numbers)</div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div class="control-row">
+            <span class="control-label">Random seed</span>
+            <span class="control-value" id="seedValue">42</span>
+          </div>
+          <input type="range" class="control-slider" id="seedSlider" min="1" max="100" value="42" oninput="updateParams()">
+          <div class="control-hint">Different seeds = different "subjects" (simulated individual variation)</div>
+        </div>
+        <button class="toggle-btn" id="fisherToggle" onclick="toggleFisher()">Fisher z-transform: OFF</button>
+      </div>
+    </div>
   </div>
+
+  <!-- RDM connection -->
+  <div class="panel rdm-panel">
+    <div class="rdm-grid">
+      <div class="rdm-text">
+        <h3>From Connectome to Dissimilarity Matrix</h3>
+        <p>The connectivity matrix above is one step from a representational dissimilarity matrix (RDM).
+        By computing d = 1 - r for each pair, correlations become distances. The upper triangle of this
+        distance matrix, flattened into a vector, is the <em>condensed dissimilarity vector</em> --
+        a compact fingerprint of this brain's representational geometry. For 20 regions, that is 190 unique
+        values. For a full 300-parcel atlas, it is 44,850 values -- but the principle is identical.
+        These condensed vectors can be compared across subjects, or between a biological brain and an
+        artificial neural network, using second-order correlation.</p>
+      </div>
+      <div class="rdm-box">
+        <div style="color:#5a6a7e;margin-bottom:8px;font-size:10px;">CONDENSED VECTOR</div>
+        <div id="condensedPreview" style="color:#C4A882;line-height:1.8;"></div>
+        <div style="color:#5a6a7e;margin-top:6px;font-size:10px;">190 unique values</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Glossary -->
+  <div class="panel glossary">
+    <h3>Key Terms</h3>
+    <div class="glossary-grid">
+      <div class="glossary-item">
+        <div class="glossary-term">BOLD signal</div>
+        <div class="glossary-def">Blood-Oxygen-Level-Dependent signal. fMRI measures changes in blood oxygenation as a proxy for neural activity. Active neurons consume oxygen, triggering increased blood flow.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Parcellation / Atlas</div>
+        <div class="glossary-def">A division of the brain into discrete regions (parcels). Common atlases: Schaefer (100-1000 parcels), AAL (116 regions), DiFuMo (data-driven). Each parcel gets one averaged time series.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Pearson correlation (r)</div>
+        <div class="glossary-def">Measures linear co-fluctuation between two signals. r = 1 means perfectly in sync, r = -1 means perfectly anti-correlated, r = 0 means unrelated. Range: [-1, +1].</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Fisher z-transform</div>
+        <div class="glossary-def">Converts bounded correlations [-1, +1] to an unbounded normal scale via z = arctanh(r). Required for valid group-level statistics because raw r values are skewed near the bounds.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Connectome</div>
+        <div class="glossary-def">A complete map of neural connections. A functional connectome is an N x N matrix of pairwise correlations between all brain regions. A structural connectome counts physical white matter tracts.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">RDM (Representational Dissimilarity Matrix)</div>
+        <div class="glossary-def">A distance matrix (d = 1 - r) encoding how differently brain regions process information. The upper triangle, flattened, is a condensed vector that fingerprints a brain's representational geometry.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">TR (Repetition Time)</div>
+        <div class="glossary-def">The time between consecutive fMRI volume acquisitions, typically 0.5-3 seconds. Determines the temporal resolution of the BOLD time series. More TRs = longer scan = more stable statistics.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Confound / Nuisance regressor</div>
+        <div class="glossary-def">Non-neural signal sources (head motion, heartbeat, breathing, scanner drift) that contaminate BOLD data. Removed during preprocessing by regression, before computing connectivity.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">Docker / Singularity</div>
+        <div class="glossary-def">Container technologies that package software with all dependencies. BIDS Apps use Docker for reproducibility, but the underlying tools (nilearn, nibabel, MNE) run without containers via pip install.</div>
+      </div>
+      <div class="glossary-item">
+        <div class="glossary-term">NIfTI (.nii / .nii.gz)</div>
+        <div class="glossary-def">The standard file format for neuroimaging data. A 3D or 4D array of voxel intensities plus a header encoding spatial orientation. Read/written by nibabel in Python.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <span><a href="https://starborn.github.io/BIDS/">&#8592; Ecosystem Map</a> | <a href="https://github.com/Starborn/BIDS/blob/main/ToolsGuideTutorial.md">Full Tutorial</a></span>
+    <span>BIDS Academy -- Module 07 of 13 -- CC BY 4.0</span>
+  </footer>
 </div>
 
-<svg width="620" height="940" viewBox="0 0 620 940" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img">
-<title>BIDS Tool Ecosystem Map -- All 13 Modalities</title>
-<defs><style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap');
-  text { font-family: 'Inter', 'Helvetica Neue', sans-serif; }
-  .title { font-size: 16px; font-weight: 600; fill: #e8edf4; }
-  .subtitle { font-size: 12px; fill: #8a9bb0; }
-  .th { font-size: 11px; font-weight: 600; fill: #d0d8e4; }
-  .ts { font-size: 10px; fill: #8a9bb0; }
-  .tm { font-size: 9px; fill: #5a6a7e; font-family: 'JetBrains Mono', monospace; }
-  .browser-yes { font-size: 10px; fill: #1D9E75; font-weight: 500; }
-  .browser-partial { font-size: 10px; fill: #C4A882; }
-  .mod-mri rect { fill: #1a1535; stroke: #534AB7; stroke-width: 1; }
-  .mod-mri .th { fill: #9B93E8; }
-  .mod-ephys rect { fill: #152018; stroke: #3B6D11; stroke-width: 1; }
-  .mod-ephys .th { fill: #8BC66A; }
-  .mod-imaging rect { fill: #1f1520; stroke: #8B3A6D; stroke-width: 1; }
-  .mod-imaging .th { fill: #C47AAB; }
-  .mod-signal rect { fill: #1a1a14; stroke: #6D5A11; stroke-width: 1; }
-  .mod-signal .th { fill: #C4A84E; }
-  .mod-other rect { fill: #141a1f; stroke: #3A5A6D; stroke-width: 1; }
-  .mod-other .th { fill: #7AACBF; }
-  .tool-convert rect { fill: #0f1f1f; stroke: #1D7A6A; stroke-width: 0.8; }
-  .tool-convert text { fill: #4EC4B0; }
-  .tool-qc rect { fill: #1f1510; stroke: #8B5A2A; stroke-width: 0.8; }
-  .tool-qc text { fill: #D4944A; }
-  .tool-preproc rect { fill: #10141f; stroke: #3A5A8B; stroke-width: 0.8; }
-  .tool-preproc text { fill: #6A9AD4; }
-  .tool-analysis rect { fill: #1a150f; stroke: #7A6A2A; stroke-width: 0.8; }
-  .tool-analysis text { fill: #C4B46A; }
-  .node rect { rx: 4; ry: 4; }
-  .divider { stroke: #1e2a3a; stroke-width: 0.5; }
-</style></defs>
+<script>
+// ============================================================
+// DATA & COMPUTATION
+// ============================================================
 
-<rect width="620" height="940" fill="#0f1520" rx="8"/>
+const REGION_LABELS = [
+  "V1", "V2", "V3", "V4", "MT",
+  "M1", "SMA", "PMC", "S1", "Cereb",
+  "mPFC", "PCC", "AG-L", "AG-R", "HPC",
+  "dlPFC-L", "dlPFC-R", "IPS-L", "IPS-R", "ACC"
+];
 
-<!-- Title -->
-<text class="title" x="310" y="28" text-anchor="middle">BIDS Tool Ecosystem -- All 13 Modalities</text>
-<text class="subtitle" x="310" y="46" text-anchor="middle">What each tool does, which modality it serves, and whether it runs in a browser</text>
+const MODULES = [
+  { name: "Visual", regions: [0,1,2,3,4], color: "#E8927C" },
+  { name: "Motor", regions: [5,6,7,8,9], color: "#7CAABD" },
+  { name: "Default Mode", regions: [10,11,12,13,14], color: "#C4A882" },
+  { name: "Frontoparietal", regions: [15,16,17,18,19], color: "#9CB89C" },
+];
 
-<!-- Color legend -->
-<rect x="70" y="58" width="10" height="10" rx="2" fill="#1a1535" stroke="#534AB7" stroke-width="1"/>
-<text class="ts" x="84" y="67">MRI</text>
-<rect x="120" y="58" width="10" height="10" rx="2" fill="#152018" stroke="#3B6D11" stroke-width="1"/>
-<text class="ts" x="134" y="67">Electrophysiology</text>
-<rect x="250" y="58" width="10" height="10" rx="2" fill="#1f1520" stroke="#8B3A6D" stroke-width="1"/>
-<text class="ts" x="264" y="67">Imaging</text>
-<rect x="320" y="58" width="10" height="10" rx="2" fill="#1a1a14" stroke="#6D5A11" stroke-width="1"/>
-<text class="ts" x="334" y="67">Signal / Motion</text>
-<rect x="430" y="58" width="10" height="10" rx="2" fill="#141a1f" stroke="#3A5A6D" stroke-width="1"/>
-<text class="ts" x="444" y="67">Other</text>
+const STEPS = [
+  {
+    title: "1. Extract Regional Time Series",
+    science: "The brain is divided into regions (parcels) using an atlas. For each region, we average the BOLD signal across all voxels within that parcel at each time point. This gives us one time series per brain region -- a simplified representation of that region's activity over time.",
+    math: "For region R with voxels {v_1, ..., v_k}:\n\nts_R(t) = (1/k) * sum_{i=1}^{k} BOLD(v_i, t)\n\nThis averaging reduces noise (individual voxels are noisy)\nand compresses data from ~100,000 voxels to ~20-1000 regions.",
+    code: `from nilearn import datasets, maskers\natlas = datasets.fetch_atlas_schaefer_2018(n_rois=200)\nmasker = maskers.NiftiLabelsMasker(atlas.maps)\ntime_series = masker.fit_transform(fmri_img)\n# Result: (n_timepoints, 200) array`
+  },
+  {
+    title: "2. Compute Pairwise Correlations",
+    science: "For every pair of regions, we compute how similarly their time series fluctuate. If two regions consistently activate and deactivate together, they are 'functionally connected.' The result is a symmetric matrix where each cell represents the connection strength between two regions.",
+    math: "Pearson correlation between regions i and j:\n\nr_ij = cov(ts_i, ts_j) / (sigma_i * sigma_j)\n\nRange: -1 (anti-correlated) to +1 (perfectly correlated)\nDiagonal is always 1 (each region correlates with itself)",
+    code: `from nilearn.connectome import ConnectivityMeasure\nconn = ConnectivityMeasure(kind='correlation')\nmatrix = conn.fit_transform([time_series])[0]\n# Result: (200, 200) symmetric correlation matrix`
+  },
+  {
+    title: "3. Fisher Z-Transform",
+    science: "Raw correlations are bounded between -1 and +1, making their distribution skewed. The Fisher z-transform stretches them onto an unbounded scale where they become approximately normally distributed. This is essential for valid statistical comparisons across subjects.",
+    math: "Fisher z-transform:\n\nz_ij = 0.5 * ln((1 + r_ij) / (1 - r_ij))\n\nThis is the inverse hyperbolic tangent (arctanh).\nIt makes the sampling distribution approximately normal\nwith known variance 1/(n-3), enabling standard tests.",
+    code: `import numpy as np\nz_matrix = np.arctanh(matrix)\n# Or equivalently:\nz_matrix = 0.5 * np.log((1 + matrix) / (1 - matrix))`
+  },
+  {
+    title: "4. Interpret as Dissimilarity Matrix",
+    science: "A connectivity matrix encodes the geometry of neural representations. By converting correlations to distances (1 - r), we get a representational dissimilarity matrix (RDM). This captures how differently brain regions process information -- the foundation for Representational Similarity Analysis (RSA) and the bridge to comparing brains with artificial neural networks.",
+    math: "Dissimilarity from correlation:\n\nd_ij = 1 - r_ij\n\nThe condensed form (upper triangle) has N*(N-1)/2 values.\nFor 20 regions: 190 values. For 300 parcels: 44,850.\n\nThese vectors can be compared across subjects or\nbetween brains and ANNs using second-order correlation.",
+    code: `from scipy.spatial.distance import squareform\ndissimilarity = 1 - matrix\ncondensed = squareform(dissimilarity)\n# Result: vector of N*(N-1)/2 unique distances`
+  }
+];
 
-<!-- Column headers -->
-<rect x="150" y="80" width="105" height="22" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
-<text class="th" x="202" y="95" text-anchor="middle" style="font-size:10px">Converters</text>
-<rect x="261" y="80" width="72" height="22" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
-<text class="th" x="297" y="95" text-anchor="middle" style="font-size:10px">QC</text>
-<rect x="339" y="80" width="105" height="22" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
-<text class="th" x="391" y="95" text-anchor="middle" style="font-size:10px">Preprocessing</text>
-<rect x="450" y="80" width="105" height="22" rx="4" fill="#0a1018" stroke="#1e2a3a" stroke-width="0.5"/>
-<text class="th" x="502" y="95" text-anchor="middle" style="font-size:10px">Analysis</text>
-<text class="th" x="578" y="95" text-anchor="middle" style="font-size:9px;fill:#5a6a7e">Browser?</text>
+// State
+let nTimepoints = 100;
+let seed = 42;
+let useFisherZ = false;
+let currentStep = 0;
+let selectedCell = [0, 10];
+let timeSeries = [];
+let connectome = [];
 
-<!-- ROW 1: MRI -->
-<g class="mod-mri">
-  <rect x="12" y="112" width="130" height="126" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetic-resonance-imaging-data.html"><text class="th" x="77" y="134" text-anchor="middle">MRI</text></a>
-  <text class="ts" x="77" y="150" text-anchor="middle">Structural (T1w, T2w)</text>
-  <text class="ts" x="77" y="164" text-anchor="middle">Functional (BOLD)</text>
-  <text class="ts" x="77" y="178" text-anchor="middle">Diffusion (DWI)</text>
-  <text class="ts" x="77" y="192" text-anchor="middle">Perfusion (ASL)</text>
-  <text class="ts" x="77" y="206" text-anchor="middle">Quantitative</text>
-</g>
-<a xlink:href="https://github.com/rordenlab/dcm2niix"><g class="node tool-convert"><rect x="150" y="114" width="105" height="21"/><text x="202" y="128" text-anchor="middle">dcm2niix</text></g></a>
-<a xlink:href="https://github.com/nipy/heudiconv"><g class="node tool-convert"><rect x="150" y="139" width="105" height="21"/><text x="202" y="153" text-anchor="middle">HeuDiConv</text></g></a>
-<a xlink:href="https://bidscoin.readthedocs.io/"><g class="node tool-convert"><rect x="150" y="164" width="105" height="21"/><text x="202" y="178" text-anchor="middle">BIDScoin</text></g></a>
-<a xlink:href="https://brainlife.io/docs/using_ezBIDS/"><g class="node tool-convert"><rect x="150" y="189" width="105" height="21"/><text x="202" y="203" text-anchor="middle">ezBIDS (web)</text></g></a>
-<a xlink:href="https://mriqc.readthedocs.io/"><g class="node tool-qc"><rect x="261" y="114" width="72" height="26"/><text x="297" y="131" text-anchor="middle">MRIQC</text></g></a>
-<a xlink:href="https://fmriprep.org/"><g class="node tool-preproc"><rect x="339" y="114" width="105" height="21"/><text x="391" y="128" text-anchor="middle">fMRIPrep</text></g></a>
-<a xlink:href="https://surfer.nmr.mgh.harvard.edu/"><g class="node tool-preproc"><rect x="339" y="139" width="105" height="21"/><text x="391" y="153" text-anchor="middle">FreeSurfer</text></g></a>
-<a xlink:href="https://github.com/Washington-University/HCPpipelines"><g class="node tool-preproc"><rect x="339" y="164" width="105" height="21"/><text x="391" y="178" text-anchor="middle">HCP Pipelines</text></g></a>
-<a xlink:href="http://brainsuite.org/"><g class="node tool-preproc"><rect x="339" y="189" width="105" height="21"/><text x="391" y="203" text-anchor="middle">BrainSuite</text></g></a>
-<a xlink:href="https://nilearn.github.io/"><g class="node tool-analysis"><rect x="450" y="114" width="105" height="21"/><text x="502" y="128" text-anchor="middle">nilearn</text></g></a>
-<a xlink:href="https://www.fil.ion.ucl.ac.uk/spm/"><g class="node tool-analysis"><rect x="450" y="139" width="105" height="21"/><text x="502" y="153" text-anchor="middle">SPM</text></g></a>
-<a xlink:href="https://www.mrtrix.org/"><g class="node tool-analysis"><rect x="450" y="164" width="105" height="21"/><text x="502" y="178" text-anchor="middle">MRtrix3</text></g></a>
-<a xlink:href="https://github.com/SIMEXP/giga_connectome"><g class="node tool-analysis"><rect x="450" y="189" width="105" height="21"/><text x="502" y="203" text-anchor="middle">giga_connectome</text></g></a>
-<text class="browser-partial" x="578" y="142" text-anchor="middle">Partial</text>
-<text class="browser-yes" x="578" y="158" text-anchor="middle">Analysis: YES</text>
-<text class="browser-partial" x="578" y="174" text-anchor="middle">Preproc: HPC</text>
+// PRNG
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
 
-<line class="divider" x1="12" y1="248" x2="608" y2="248"/>
+function gaussianRng(rng) {
+  let u = 0, v = 0;
+  while (u === 0) u = rng();
+  while (v === 0) v = rng();
+  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
 
-<!-- ROW 2: EEG -->
-<g class="mod-ephys">
-  <rect x="12" y="258" width="130" height="50" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electroencephalography.html"><text class="th" x="77" y="278" text-anchor="middle">EEG</text></a>
-  <text class="ts" x="77" y="294" text-anchor="middle">Scalp electrodes</text>
-</g>
-<a xlink:href="https://mne.tools/mne-bids/"><g class="node tool-convert"><rect x="150" y="262" width="105" height="21"/><text x="202" y="276" text-anchor="middle">MNE-BIDS</text></g></a>
-<a xlink:href="https://eeglab.org/tutorials/04_Import/BIDS.html"><g class="node tool-convert"><rect x="150" y="287" width="105" height="21"/><text x="202" y="301" text-anchor="middle">EEGLAB</text></g></a>
-<a xlink:href="https://mne.tools/"><g class="node tool-preproc"><rect x="339" y="262" width="105" height="21"/><text x="391" y="276" text-anchor="middle">MNE-Python</text></g></a>
-<a xlink:href="https://www.fieldtriptoolbox.org/"><g class="node tool-analysis"><rect x="450" y="262" width="105" height="21"/><text x="502" y="276" text-anchor="middle">FieldTrip</text></g></a>
-<text class="browser-yes" x="578" y="284" text-anchor="middle">YES (MNE)</text>
+function generateData() {
+  const rng = mulberry32(seed);
+  const moduleSignals = MODULES.map(() => {
+    const sig = [];
+    for (let t = 0; t < nTimepoints; t++) sig.push(gaussianRng(rng) * 2);
+    return sig;
+  });
+  const globalSignal = [];
+  for (let t = 0; t < nTimepoints; t++) globalSignal.push(gaussianRng(rng) * 0.5);
 
-<line class="divider" x1="12" y1="318" x2="608" y2="318"/>
+  timeSeries = [];
+  for (let r = 0; r < 20; r++) {
+    const ts = [];
+    const mi = MODULES.findIndex(m => m.regions.includes(r));
+    for (let t = 0; t < nTimepoints; t++) {
+      let val = globalSignal[t];
+      if (mi >= 0) val += moduleSignals[mi][t] * 0.8;
+      val += gaussianRng(rng) * 1.2;
+      ts.push(val);
+    }
+    timeSeries.push(ts);
+  }
 
-<!-- ROW 3: MEG -->
-<g class="mod-ephys">
-  <rect x="12" y="328" width="130" height="48" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetoencephalography.html"><text class="th" x="77" y="348" text-anchor="middle">MEG</text></a>
-  <text class="ts" x="77" y="364" text-anchor="middle">SQUID sensors</text>
-</g>
-<a xlink:href="https://mne.tools/mne-bids/"><g class="node tool-convert"><rect x="150" y="332" width="105" height="21"/><text x="202" y="346" text-anchor="middle">MNE-BIDS</text></g></a>
-<a xlink:href="https://macquarie-meg-research.github.io/Biscuit/"><g class="node tool-convert"><rect x="150" y="357" width="105" height="21"/><text x="202" y="371" text-anchor="middle">Biscuit</text></g></a>
-<a xlink:href="https://mne.tools/"><g class="node tool-preproc"><rect x="339" y="332" width="105" height="21"/><text x="391" y="346" text-anchor="middle">MNE-Python</text></g></a>
-<text class="browser-yes" x="578" y="354" text-anchor="middle">YES (MNE)</text>
+  // Compute connectome
+  connectome = [];
+  for (let i = 0; i < 20; i++) {
+    connectome[i] = [];
+    for (let j = 0; j < 20; j++) {
+      let r = pearson(timeSeries[i], timeSeries[j]);
+      if (useFisherZ && i !== j) r = Math.min(Math.max(r, -0.9999), 0.9999), r = 0.5 * Math.log((1 + r) / (1 - r));
+      connectome[i][j] = r;
+    }
+  }
+}
 
-<line class="divider" x1="12" y1="386" x2="608" y2="386"/>
+function pearson(x, y) {
+  const n = x.length;
+  let sx = 0, sy = 0, sxy = 0, sx2 = 0, sy2 = 0;
+  for (let i = 0; i < n; i++) {
+    sx += x[i]; sy += y[i]; sxy += x[i]*y[i]; sx2 += x[i]*x[i]; sy2 += y[i]*y[i];
+  }
+  const num = n * sxy - sx * sy;
+  const den = Math.sqrt((n * sx2 - sx * sx) * (n * sy2 - sy * sy));
+  return den === 0 ? 0 : num / den;
+}
 
-<!-- ROW 4: iEEG -->
-<g class="mod-ephys">
-  <rect x="12" y="396" width="130" height="38" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/intracranial-electroencephalography.html"><text class="th" x="77" y="416" text-anchor="middle">iEEG</text></a>
-  <text class="ts" x="77" y="430" text-anchor="middle">Implanted electrodes</text>
-</g>
-<a xlink:href="https://mne.tools/mne-bids/"><g class="node tool-convert"><rect x="150" y="402" width="105" height="21"/><text x="202" y="416" text-anchor="middle">MNE-BIDS</text></g></a>
-<a xlink:href="https://mne.tools/"><g class="node tool-analysis"><rect x="450" y="402" width="105" height="21"/><text x="502" y="416" text-anchor="middle">MNE-Python</text></g></a>
-<text class="browser-yes" x="578" y="418" text-anchor="middle">YES</text>
+// ============================================================
+// RENDERING
+// ============================================================
 
-<line class="divider" x1="12" y1="444" x2="608" y2="444"/>
+function colorScale(val) {
+  if (val >= 0) {
+    const t = Math.min(val, 1);
+    return `rgb(${Math.round(40+t*188)},${Math.round(40+t*70)},${Math.round(50+t*24)})`;
+  } else {
+    const t = Math.min(Math.abs(val), 1);
+    return `rgb(${Math.round(40+t*44)},${Math.round(40+t*110)},${Math.round(50+t*139)})`;
+  }
+}
 
-<!-- ROW 5: PET -->
-<g class="mod-imaging">
-  <rect x="12" y="454" width="130" height="38" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/positron-emission-tomography.html"><text class="th" x="77" y="474" text-anchor="middle">PET</text></a>
-  <text class="ts" x="77" y="488" text-anchor="middle">Radiotracer decay</text>
-</g>
-<g class="node tool-convert"><rect x="150" y="462" width="105" height="21"/><text x="202" y="476" text-anchor="middle">DICOM converters</text></g>
-<a xlink:href="https://surfer.nmr.mgh.harvard.edu/fswiki/PetSurfer"><g class="node tool-analysis"><rect x="450" y="462" width="105" height="21"/><text x="502" y="476" text-anchor="middle">PETSurfer</text></g></a>
-<text class="browser-partial" x="578" y="478" text-anchor="middle">Partial</text>
+function drawHeatmap() {
+  const canvas = document.getElementById('heatmap');
+  const ctx = canvas.getContext('2d');
+  const size = 340;
+  const margin = 50;
+  const cellSize = (size - margin) / 20;
 
-<line class="divider" x1="12" y1="502" x2="608" y2="502"/>
+  ctx.clearRect(0, 0, size, size);
 
-<!-- ROW 6: fNIRS -->
-<g class="mod-imaging">
-  <rect x="12" y="512" width="130" height="38" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/near-infrared-spectroscopy.html"><text class="th" x="77" y="532" text-anchor="middle">fNIRS</text></a>
-  <text class="ts" x="77" y="546" text-anchor="middle">Near-infrared light</text>
-</g>
-<a xlink:href="https://mne.tools/mne-bids/"><g class="node tool-convert"><rect x="150" y="520" width="105" height="21"/><text x="202" y="534" text-anchor="middle">MNE-BIDS</text></g></a>
-<a xlink:href="https://mne.tools/mne-nirs/"><g class="node tool-preproc"><rect x="339" y="520" width="105" height="21"/><text x="391" y="534" text-anchor="middle">MNE-NIRS</text></g></a>
-<text class="browser-yes" x="578" y="536" text-anchor="middle">YES</text>
+  // Module brackets
+  MODULES.forEach(mod => {
+    const y1 = margin + mod.regions[0] * cellSize;
+    const y2 = margin + (mod.regions[mod.regions.length - 1] + 1) * cellSize;
+    ctx.strokeStyle = mod.color;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(margin - 8, y1); ctx.lineTo(margin - 8, y2);
+    ctx.stroke();
 
-<line class="divider" x1="12" y1="560" x2="608" y2="560"/>
+    ctx.fillStyle = mod.color;
+    ctx.font = "500 8px 'DM Sans'";
+    ctx.textAlign = "right";
+    ctx.fillText(mod.name, margin - 12, (y1 + y2) / 2 + 3);
+  });
 
-<!-- ROW 7: MRS -->
-<g class="mod-imaging">
-  <rect x="12" y="570" width="130" height="38" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetic-resonance-spectroscopy.html"><text class="th" x="77" y="590" text-anchor="middle">MRS</text></a>
-  <text class="ts" x="77" y="604" text-anchor="middle">Chemical spectra</text>
-</g>
-<a xlink:href="https://github.com/wtclarke/spec2nii"><g class="node tool-convert"><rect x="150" y="578" width="105" height="21"/><text x="202" y="592" text-anchor="middle">spec2nii</text></g></a>
-<a xlink:href="https://open.win.ox.ac.uk/pages/fsl/fsl_mrs/"><g class="node tool-analysis"><rect x="450" y="578" width="105" height="21"/><text x="502" y="592" text-anchor="middle">FSL-MRS</text></g></a>
-<text class="browser-yes" x="578" y="594" text-anchor="middle">YES</text>
+  // Cells
+  for (let i = 0; i < 20; i++) {
+    for (let j = 0; j < 20; j++) {
+      const x = margin + j * cellSize;
+      const y = margin + i * cellSize;
+      ctx.fillStyle = colorScale(connectome[i][j]);
+      ctx.fillRect(x, y, cellSize, cellSize);
 
-<line class="divider" x1="12" y1="618" x2="608" y2="618"/>
+      if (selectedCell && selectedCell[0] === i && selectedCell[1] === j) {
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(x, y, cellSize, cellSize);
+      }
+    }
+  }
 
-<!-- ROW 8: Microscopy -->
-<g class="mod-imaging">
-  <rect x="12" y="628" width="130" height="32" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/microscopy.html"><text class="th" x="77" y="648" text-anchor="middle">Microscopy</text></a>
-</g>
-<text class="ts" x="350" y="648" text-anchor="middle">Emerging tool ecosystem</text>
-<text class="browser-partial" x="578" y="648" text-anchor="middle">Partial</text>
+  // Top labels
+  ctx.fillStyle = "#8a9bb0";
+  ctx.font = "7px 'JetBrains Mono'";
+  ctx.textAlign = "right";
+  REGION_LABELS.forEach((label, i) => {
+    ctx.save();
+    ctx.translate(margin + i * cellSize + cellSize / 2, margin - 4);
+    ctx.rotate(-Math.PI / 4);
+    ctx.fillText(label, 0, 0);
+    ctx.restore();
+  });
+}
 
-<line class="divider" x1="12" y1="670" x2="608" y2="670"/>
+function drawTimeSeries() {
+  const canvas = document.getElementById('tsPlot');
+  const ctx = canvas.getContext('2d');
+  const w = 400, h = 130;
+  ctx.clearRect(0, 0, w, h);
 
-<!-- ROW 9: Motion -->
-<g class="mod-signal">
-  <rect x="12" y="680" width="130" height="32" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/motion.html"><text class="th" x="77" y="700" text-anchor="middle">Motion</text></a>
-</g>
-<text class="ts" x="350" y="700" text-anchor="middle">IMU / optical motion capture</text>
-<text class="browser-yes" x="578" y="700" text-anchor="middle">YES</text>
+  const [h1, h2] = selectedCell;
+  const ts1 = timeSeries[h1];
+  const ts2 = timeSeries[h2];
+  const nT = ts1.length;
 
-<!-- ROW 10: EMG -->
-<g class="mod-signal">
-  <rect x="12" y="722" width="130" height="32" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electromyography.html"><text class="th" x="77" y="742" text-anchor="middle">EMG</text></a>
-</g>
-<a xlink:href="https://mne.tools/mne-bids/"><g class="node tool-convert"><rect x="150" y="728" width="105" height="21"/><text x="202" y="742" text-anchor="middle">MNE-BIDS</text></g></a>
-<a xlink:href="https://mne.tools/"><g class="node tool-analysis"><rect x="450" y="728" width="105" height="21"/><text x="502" y="742" text-anchor="middle">MNE-Python</text></g></a>
-<text class="browser-yes" x="578" y="742" text-anchor="middle">YES</text>
+  const mod1 = MODULES.find(m => m.regions.includes(h1));
+  const mod2 = MODULES.find(m => m.regions.includes(h2));
 
-<!-- ROW 11: Physiological -->
-<g class="mod-signal">
-  <rect x="12" y="764" width="130" height="32" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/physiological-recordings.html"><text class="th" x="77" y="784" text-anchor="middle">Physiological</text></a>
-</g>
-<a xlink:href="https://phys2bids.readthedocs.io/"><g class="node tool-convert"><rect x="150" y="770" width="105" height="21"/><text x="202" y="784" text-anchor="middle">phys2bids</text></g></a>
-<text class="ts" x="391" y="784" text-anchor="middle">Signal processing</text>
-<text class="browser-yes" x="578" y="784" text-anchor="middle">YES</text>
+  const maxVal = Math.max(...ts1.map(Math.abs), ...ts2.map(Math.abs)) * 1.1;
 
-<!-- ROW 12: Behavioral -->
-<g class="mod-other">
-  <rect x="12" y="806" width="130" height="32" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/behavioral-experiments.html"><text class="th" x="77" y="826" text-anchor="middle">Behavioral</text></a>
-</g>
-<a xlink:href="https://github.com/psych-ds/psychopy-bids"><g class="node tool-convert"><rect x="150" y="812" width="105" height="21"/><text x="202" y="826" text-anchor="middle">psychopy-bids</text></g></a>
-<text class="ts" x="391" y="826" text-anchor="middle">Statistical analysis</text>
-<text class="browser-yes" x="578" y="826" text-anchor="middle">YES</text>
+  // Center line
+  ctx.strokeStyle = "#2a3444"; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(50, h/2); ctx.lineTo(w-15, h/2); ctx.stroke();
 
-<!-- ROW 13: Genetic -->
-<g class="mod-other">
-  <rect x="12" y="848" width="130" height="32" rx="8"/>
-  <a xlink:href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/genetic-descriptor.html"><text class="th" x="77" y="868" text-anchor="middle">Genetic Descriptor</text></a>
-</g>
-<text class="ts" x="350" y="868" text-anchor="middle">Metadata framework -- links genomic data to imaging</text>
+  // Labels
+  ctx.fillStyle = "#8a9bb0"; ctx.font = "8px 'JetBrains Mono'"; ctx.textAlign = "right";
+  ctx.fillText("+" + maxVal.toFixed(1), 45, 15);
+  ctx.fillText("-" + maxVal.toFixed(1), 45, h - 5);
 
-<!-- Footer -->
-<line class="divider" x1="12" y1="892" x2="608" y2="892"/>
-<text class="tm" x="310" y="907" text-anchor="middle">Shared: BIDS Validator (browser) | PyBIDS | nibabel | nipype | OpenNeuro (1000+ datasets)</text>
+  const r = pearson(timeSeries[h1], timeSeries[h2]);
+  ctx.fillStyle = "#8a9bb0"; ctx.font = "9px 'DM Sans'"; ctx.textAlign = "center";
+  ctx.fillText("Time (TR) -- r = " + r.toFixed(3), w/2, h + 15);
 
-</svg>
+  // Draw lines
+  function drawLine(ts, color) {
+    ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.85;
+    ctx.beginPath();
+    ts.forEach((v, t) => {
+      const x = 50 + (t / (nT - 1)) * (w - 70);
+      const y = h/2 - (v / maxVal) * (h/2 - 15);
+      t === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  drawLine(ts1, mod1 ? mod1.color : "#E8927C");
+  drawLine(ts2, mod2 ? mod2.color : "#7CAABD");
+
+  // Legend
+  ctx.font = "9px 'JetBrains Mono'"; ctx.textAlign = "right";
+  ctx.fillStyle = mod1 ? mod1.color : "#E8927C";
+  ctx.fillText(REGION_LABELS[h1], w - 10, 15);
+  ctx.fillStyle = mod2 ? mod2.color : "#7CAABD";
+  ctx.fillText(REGION_LABELS[h2], w - 10, 27);
+}
+
+function updateCellInfo() {
+  const [i, j] = selectedCell;
+  const val = connectome[i][j];
+  const color = val > 0.3 ? "#E8927C" : val < -0.1 ? "#7CAABD" : "#5a6a7e";
+  document.getElementById('cellInfo').innerHTML =
+    REGION_LABELS[i] + " &#8596; " + REGION_LABELS[j] +
+    " <span style='color:" + color + ";margin-left:12px'>" + val.toFixed(4) + "</span>";
+}
+
+function updateCondensed() {
+  let vals = [];
+  for (let i = 0; i < 4; i++) {
+    for (let j = i + 1; j < Math.min(i + 3, 20); j++) {
+      vals.push((1 - connectome[i][j]).toFixed(3));
+    }
+  }
+  document.getElementById('condensedPreview').innerHTML =
+    vals.join(" ") + " <span style='color:#5a6a7e'>...</span>";
+}
+
+// ============================================================
+// UI
+// ============================================================
+
+function renderStepNav() {
+  const nav = document.getElementById('stepNav');
+  nav.innerHTML = STEPS.map((s, i) =>
+    `<button class="step-btn ${i === currentStep ? 'active' : ''}" onclick="setStep(${i})">${s.title}</button>`
+  ).join('');
+}
+
+function renderStep() {
+  const step = STEPS[currentStep];
+  document.getElementById('stepTitle').textContent = step.title;
+  document.getElementById('stepScience').textContent = step.science;
+  document.getElementById('stepMath').textContent = step.math;
+  document.getElementById('codeBlock').textContent = step.code;
+}
+
+function setStep(i) {
+  currentStep = i;
+  renderStepNav();
+  renderStep();
+}
+
+function toggleCode() {
+  const block = document.getElementById('codeBlock');
+  const btn = document.getElementById('codeToggle');
+  if (block.style.display === 'none') {
+    block.style.display = 'block';
+    btn.textContent = 'hide code';
+    btn.classList.add('on');
+  } else {
+    block.style.display = 'none';
+    btn.textContent = 'show code';
+    btn.classList.remove('on');
+  }
+}
+
+function toggleFisher() {
+  useFisherZ = !useFisherZ;
+  const btn = document.getElementById('fisherToggle');
+  btn.textContent = "Fisher z-transform: " + (useFisherZ ? "ON" : "OFF");
+  btn.className = "toggle-btn" + (useFisherZ ? " on" : "");
+  document.getElementById('scaleLabel').textContent = useFisherZ ? "Fisher z" : "Pearson r";
+  refresh();
+}
+
+function updateParams() {
+  nTimepoints = parseInt(document.getElementById('tpSlider').value);
+  seed = parseInt(document.getElementById('seedSlider').value);
+  document.getElementById('tpValue').textContent = nTimepoints;
+  document.getElementById('seedValue').textContent = seed;
+  refresh();
+}
+
+function refresh() {
+  generateData();
+  drawHeatmap();
+  drawTimeSeries();
+  updateCellInfo();
+  updateCondensed();
+}
+
+// Heatmap click
+document.getElementById('heatmap').addEventListener('click', function(e) {
+  const rect = this.getBoundingClientRect();
+  const scaleX = 340 / rect.width;
+  const scaleY = 340 / rect.height;
+  const x = (e.clientX - rect.left) * scaleX - 50;
+  const y = (e.clientY - rect.top) * scaleY - 50;
+  const cellSize = (340 - 50) / 20;
+  const col = Math.floor(x / cellSize);
+  const row = Math.floor(y / cellSize);
+  if (row >= 0 && row < 20 && col >= 0 && col < 20) {
+    selectedCell = [row, col];
+    drawHeatmap();
+    drawTimeSeries();
+    updateCellInfo();
+  }
+});
+
+// Init
+renderStepNav();
+renderStep();
+refresh();
+</script>
+
 </body>
 </html>
