@@ -1,8 +1,14 @@
-BIDS Academy -- Module 07
+BIDS Academy -- Module 07     
+
+DRAFT
+
 Functional Connectivity
 How correlated brain activity reveals the architecture of neural networks -- from raw time series to dissimilarity matrices, using BIDS tools without Docker.
+
 Interactive module: starborn.github.io/BIDS/module-07-connectivity.html
+
 Ecosystem map: starborn.github.io/BIDS
+
 Full tutorial: ToolsGuideTutorial.md
 Version 0.2 -- May 2026 | ESL / W3C AIKR CG | CC BY 4.0
 
