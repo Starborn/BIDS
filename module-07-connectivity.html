@@ -5,16 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BIDS Academy -- Module 07: Functional Connectivity</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: #0f1520;
-    color: #d0d8e4;
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-  }
+  body { background: #0f1520; color: #d0d8e4; font-family: 'DM Sans', sans-serif; }
 
   .grid-bg {
     position: fixed; inset: 0; opacity: 0.03; pointer-events: none;
@@ -22,67 +16,68 @@
     background-size: 24px 24px;
   }
 
-  .container { max-width: 960px; margin: 0 auto; padding: 32px 24px; position: relative; }
+  .container { max-width: 780px; margin: 0 auto; padding: 32px 24px; position: relative; }
 
-  .badge {
-    font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    letter-spacing: 0.12em; text-transform: uppercase;
-  }
+  /* Typography */
+  .badge { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
   .badge-primary { color: #E8927C; }
   .badge-secondary { color: #5a6a7e; letter-spacing: 0.08em; }
+  h1 { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 36px; color: #e8edf4; margin: 0 0 8px; line-height: 1.2; }
+  h2 { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 22px; color: #e8edf4; margin: 32px 0 16px; }
+  h3 { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 17px; color: #e8edf4; margin: 24px 0 10px; }
+  .lead { font-size: 15px; color: #6a7a8e; max-width: 640px; line-height: 1.6; }
+  p { font-size: 14px; line-height: 1.75; color: #9aabb8; margin-bottom: 14px; }
+  p em { color: #C4A882; font-style: italic; }
 
-  h1 {
-    font-family: 'Playfair Display', serif; font-weight: 600; font-size: 36px;
-    color: #e8edf4; margin: 0 0 8px 0; line-height: 1.2;
+  /* Panels */
+  .panel { background: #141c2a; border-radius: 10px; padding: 24px; border: 1px solid #1e2a3a; margin-bottom: 20px; }
+  .panel-dark { background: #0f1520; border-radius: 6px; padding: 14px 18px; border: 1px solid #1e2a3a; }
+
+  /* Part tabs */
+  .part-tabs { display: flex; gap: 0; margin: 28px 0 0; border-bottom: 1px solid #1e2a3a; }
+  .part-tab {
+    padding: 12px 20px; background: transparent; border: none; border-bottom: 2px solid transparent;
+    color: #5a6a7e; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px;
+    font-weight: 500; transition: all 0.25s;
   }
-
-  .lead { font-size: 15px; color: #6a7a8e; max-width: 600px; line-height: 1.6; }
+  .part-tab:hover { color: #8a9bb0; }
+  .part-tab.active { color: #E8927C; border-bottom-color: #E8927C; }
+  .part-content { display: none; padding-top: 24px; }
+  .part-content.active { display: block; }
 
   /* Step buttons */
-  .steps { display: flex; gap: 8px; margin: 28px 0; flex-wrap: wrap; }
+  .steps { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
   .step-btn {
     padding: 10px 16px; border: 1px solid #2a3444; background: transparent;
     color: #8a9bb0; cursor: pointer; font-family: 'DM Sans', sans-serif;
-    font-size: 13px; transition: all 0.25s ease; border-radius: 6px;
+    font-size: 13px; transition: all 0.25s; border-radius: 6px;
   }
   .step-btn:hover { border-color: #4a5a6e; color: #d0d8e4; }
   .step-btn.active { border-color: #E8927C; color: #E8927C; background: rgba(232, 146, 124, 0.08); }
 
-  /* Panels */
-  .panel {
-    background: #141c2a; border-radius: 10px; padding: 24px;
-    border: 1px solid #1e2a3a;
-  }
-
+  /* Interactive grid */
   .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
   @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
-
   .right-stack { display: flex; flex-direction: column; gap: 16px; }
 
-  h3 {
-    font-family: 'Playfair Display', serif; font-size: 18px; color: #e8edf4;
-    margin: 0 0 12px 0; font-weight: 600;
-  }
+  /* Section label */
+  .section-label { font-size: 11px; color: #5a6a7e; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; }
 
-  .science-text { font-size: 13.5px; line-height: 1.7; color: #9aabb8; margin: 0 0 16px 0; }
-
-  .section-label {
-    font-size: 11px; color: #5a6a7e; margin-bottom: 6px;
-    font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;
-  }
-
+  /* Math */
   .math-block {
     background: #141c2a; border-left: 3px solid #C4A882; border-radius: 0 6px 6px 0;
     padding: 14px 18px; font-family: 'JetBrains Mono', monospace;
-    font-size: 12px; line-height: 1.7; color: #C4A882; white-space: pre-wrap;
+    font-size: 12px; line-height: 1.7; color: #C4A882; white-space: pre-wrap; margin: 12px 0;
   }
 
+  /* Code */
   pre.code-block {
-    background: #141c2a; border: 1px solid #1e2a3a; border-radius: 6px;
+    background: #0f1520; border: 1px solid #1e2a3a; border-radius: 6px;
     padding: 14px 18px; font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px; line-height: 1.6; color: #9CB89C; overflow-x: auto; margin: 0;
+    font-size: 11.5px; line-height: 1.6; color: #9CB89C; overflow-x: auto; margin: 8px 0;
   }
 
+  /* Buttons */
   .toggle-btn {
     padding: 6px 14px; border: 1px solid #2a3444; background: transparent;
     color: #8a9bb0; cursor: pointer; font-family: 'JetBrains Mono', monospace;
@@ -90,65 +85,90 @@
   }
   .toggle-btn.on { border-color: #9CB89C; color: #9CB89C; background: rgba(156, 184, 156, 0.1); }
 
+  .action-btn {
+    padding: 10px 20px; border: 1px solid #E8927C; background: rgba(232, 146, 124, 0.1);
+    color: #E8927C; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; border-radius: 6px; transition: all 0.2s; font-weight: 500;
+  }
+  .action-btn:hover { background: rgba(232, 146, 124, 0.2); }
+  .action-btn-secondary {
+    padding: 10px 20px; border: 1px solid #2a3444; background: transparent;
+    color: #8a9bb0; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; border-radius: 6px; transition: all 0.2s;
+  }
+  .action-btn-secondary:hover { border-color: #4a5a6e; color: #d0d8e4; }
+
+  /* Slider */
   .control-slider {
     -webkit-appearance: none; appearance: none; width: 100%; height: 4px;
     background: #2a3444; border-radius: 2px; outline: none;
   }
   .control-slider::-webkit-slider-thumb {
-    -webkit-appearance: none; appearance: none; width: 14px; height: 14px;
+    -webkit-appearance: none; width: 14px; height: 14px;
     background: #E8927C; border-radius: 50%; cursor: pointer;
   }
 
-  .cell-info {
-    background: #0f1520; border-radius: 6px; padding: 12px;
-    border: 1px solid #1e2a3a; margin-bottom: 16px;
-  }
+  /* Info box */
+  .cell-info { background: #0f1520; border-radius: 6px; padding: 12px; border: 1px solid #1e2a3a; margin-bottom: 16px; }
   .cell-info .label { font-size: 11px; color: #5a6a7e; margin-bottom: 4px; }
   .cell-info .value { font-size: 14px; color: #e8edf4; font-family: 'JetBrains Mono', monospace; }
 
-  .color-legend {
-    display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
-  }
-  .color-bar {
-    flex: 1; height: 8px; border-radius: 4px; max-width: 200px;
-    background: linear-gradient(90deg, #547fbf, #282832, #e89264);
-  }
+  /* Color legend */
+  .color-legend { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .color-bar { flex: 1; height: 8px; border-radius: 4px; max-width: 200px; background: linear-gradient(90deg, #547fbf, #282832, #e89264); }
   .color-label { font-size: 10px; color: #5a6a7e; font-family: 'JetBrains Mono', monospace; }
 
-  .rdm-panel { margin-top: 24px; }
-  .rdm-grid { display: flex; gap: 24px; align-items: flex-start; }
-  @media (max-width: 768px) { .rdm-grid { flex-direction: column; } }
-  .rdm-text { flex: 1; }
-  .rdm-text h3 { font-size: 16px; }
-  .rdm-text p { font-size: 13px; line-height: 1.7; color: #8a9bb0; }
-  .rdm-box {
-    min-width: 180px; background: #0f1520; border-radius: 8px; padding: 16px;
-    border: 1px solid #1e2a3a; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  /* Concept cards */
+  .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+  @media (max-width: 600px) { .concept-grid { grid-template-columns: 1fr; } }
+  .concept-card { background: #0f1520; border-radius: 8px; padding: 16px; border: 1px solid #1e2a3a; }
+  .concept-term { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #E8927C; margin-bottom: 6px; font-weight: 500; }
+  .concept-def { font-size: 12.5px; color: #8a9bb0; line-height: 1.6; }
+
+  /* Pipeline diagram */
+  .pipeline { display: flex; align-items: center; gap: 0; margin: 20px 0; flex-wrap: wrap; justify-content: center; }
+  .pipe-step {
+    padding: 10px 16px; border-radius: 6px; font-size: 11px; font-family: 'JetBrains Mono', monospace;
+    text-align: center; line-height: 1.4;
   }
+  .pipe-arrow { color: #2a3444; font-size: 18px; padding: 0 4px; }
+  .pipe-bids { background: #1a1535; border: 1px solid #534AB7; color: #9B93E8; }
+  .pipe-tool { background: #0f1f1f; border: 1px solid #1D7A6A; color: #4EC4B0; }
+  .pipe-here { background: rgba(232, 146, 124, 0.15); border: 1px solid #E8927C; color: #E8927C; }
+
+  /* File upload */
+  .upload-zone {
+    border: 2px dashed #2a3444; border-radius: 10px; padding: 30px; text-align: center;
+    cursor: pointer; transition: all 0.2s; margin: 16px 0;
+  }
+  .upload-zone:hover { border-color: #4a5a6e; background: rgba(255,255,255,0.02); }
+  .upload-zone input { display: none; }
+
+  /* Graph metrics */
+  .metrics-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+  .metric-card { background: #0f1520; border: 1px solid #1e2a3a; border-radius: 8px; padding: 14px; flex: 1; min-width: 120px; }
+  .metric-label { font-size: 10px; color: #5a6a7e; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
+  .metric-value { font-size: 20px; color: #e8edf4; font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+  .metric-hint { font-size: 10px; color: #4a5a6e; margin-top: 4px; }
+
+  /* Links */
+  a { color: #7AACBF; text-decoration: none; }
+  a:hover { color: #a0d0e4; }
+
+  /* Footer */
+  footer {
+    margin-top: 32px; padding-top: 20px; border-top: 1px solid #1e2a3a;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+  }
+  footer span { font-size: 11px; color: #4a5a6e; }
 
   .control-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
   .control-label { font-size: 12px; color: #8a9bb0; }
   .control-value { font-size: 12px; color: #E8927C; font-family: 'JetBrains Mono', monospace; }
   .control-hint { font-size: 10px; color: #4a5a6e; margin-top: 4px; }
 
-  footer {
-    margin-top: 32px; padding-top: 20px; border-top: 1px solid #1e2a3a;
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
-  }
-  footer span { font-size: 11px; color: #4a5a6e; }
-  footer a { color: #5a6a7e; text-decoration: none; }
-  footer a:hover { color: #7AACBF; }
-
-  .glossary { margin-top: 24px; }
-  .glossary h3 { margin-bottom: 16px; }
-  .glossary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 768px) { .glossary-grid { grid-template-columns: 1fr; } }
-  .glossary-item { background: #0f1520; border-radius: 6px; padding: 12px; border: 1px solid #1e2a3a; }
-  .glossary-term {
-    font-family: 'JetBrains Mono', monospace; font-size: 12px;
-    color: #E8927C; margin-bottom: 4px; font-weight: 500;
-  }
-  .glossary-def { font-size: 12px; color: #8a9bb0; line-height: 1.5; }
+  .read-more { font-size: 12px; color: #5a6a7e; margin-top: 8px; }
+  .read-more a { color: #7AACBF; }
 </style>
 </head>
 <body>
@@ -164,135 +184,311 @@
       <span class="badge badge-secondary">Module 07</span>
     </div>
     <h1>Functional Connectivity</h1>
-    <p class="lead">How correlated brain activity reveals the architecture of neural networks -- from raw time series to dissimilarity matrices.</p>
+    <p class="lead">How correlated brain activity reveals the architecture of neural networks -- from raw time series to dissimilarity matrices, using BIDS tools without Docker.</p>
   </header>
 
-  <!-- Step nav -->
-  <nav class="steps" id="stepNav"></nav>
+  <!-- Part tabs -->
+  <nav class="part-tabs">
+    <button class="part-tab active" onclick="showPart(0)">Part 1: The Science</button>
+    <button class="part-tab" onclick="showPart(1)">Part 2: BIDS &amp; Connectivity</button>
+    <button class="part-tab" onclick="showPart(2)">Part 3: Interactive Tutorial</button>
+  </nav>
 
-  <!-- Main content -->
-  <div class="main-grid">
-    <!-- Left: Visualization -->
-    <div class="panel">
-      <canvas id="heatmap" width="340" height="340" style="cursor:crosshair;margin-bottom:12px;"></canvas>
-      <div class="color-legend">
-        <span class="color-label">-1</span>
-        <div class="color-bar"></div>
-        <span class="color-label">+1</span>
-        <span class="color-label" id="scaleLabel" style="margin-left:8px">Pearson r</span>
+  <!-- ============================================================ -->
+  <!-- PART 1: INTRODUCTION TO BRAIN CONNECTIVITY -->
+  <!-- ============================================================ -->
+  <div class="part-content active" id="part0">
+
+    <h2>Introduction to Brain Connectivity</h2>
+
+    <p>The brain is not a collection of independent regions working in isolation. It is a network. Different areas communicate constantly -- the visual cortex talks to the motor cortex when you reach for something you see, memory regions talk to decision-making regions when you draw on past experience to make a choice. <em>Brain connectivity</em> is the study of these communication patterns.</p>
+
+    <h3>Two kinds of connectivity</h3>
+    <p><em>Structural connectivity</em> maps the physical wiring -- the white matter fibers (axon bundles) that physically connect one region to another, like cables between buildings. <em>Functional connectivity</em> maps coordinated activity -- regions that consistently activate and deactivate together over time, whether or not they are directly wired to each other. This module focuses on functional connectivity.</p>
+
+    <h3>What are brain regions?</h3>
+    <p>A raw fMRI scan contains about 100,000 tiny measurement points called <em>voxels</em>, each roughly 2-3mm across. Individual voxels are noisy. To make the data manageable, we divide the brain into larger regions (parcels) using an <em>atlas</em> -- a pre-defined map that groups voxels into anatomically or functionally meaningful areas. Common atlases define between 100 and 1,000 regions. This module uses 20 regions for clarity.</p>
+
+    <h3>What is a time series?</h3>
+    <p>During an fMRI scan, the scanner takes a snapshot of the whole brain every 1-2 seconds (the <em>repetition time</em>, or TR). For each brain region, we get a sequence of numbers -- one value per snapshot -- representing that region's activity level over time. This sequence is a <em>time series</em>. If the scan lasts 5 minutes with a TR of 2 seconds, you get 150 numbers per region.</p>
+
+    <h3>What does the BOLD signal measure?</h3>
+    <p>fMRI does not measure neural activity directly. It measures blood oxygenation. When neurons fire, they consume oxygen, triggering a local increase in blood flow that overshoots the demand. This hemodynamic response changes the ratio of oxygenated to deoxygenated hemoglobin, which has different magnetic properties -- and that is what the scanner detects. The signal is called <em>BOLD</em>: Blood-Oxygen-Level-Dependent.</p>
+
+    <h3>What is correlation?</h3>
+    <p>Correlation measures how similarly two signals fluctuate over time. If region A's activity goes up whenever region B's goes up, and down when B goes down, they are <em>positively correlated</em>. If A goes up when B goes down, they are <em>anti-correlated</em>. If there is no pattern, they are <em>uncorrelated</em>.</p>
+    <p>The <em>Pearson correlation coefficient</em> (r) quantifies this on a scale from -1 to +1. These are its bounds -- r can never go below -1 or above +1. That is what "bounded" means. A value of r = 1 means perfect lockstep, r = -1 means perfect opposition, and r = 0 means no linear relationship. "Linear co-fluctuation" simply means the two signals tend to rise and fall together (or in opposition) in a proportional way.</p>
+
+    <div class="math-block">Pearson correlation:
+
+r = cov(X, Y) / (sigma_X * sigma_Y)
+
+where cov is covariance and sigma is standard deviation.
+Range: [-1, +1]</div>
+
+    <h3>What is a connectivity matrix?</h3>
+    <p>If you compute the correlation between every possible pair of brain regions, you get a symmetric matrix -- a grid where rows and columns are regions and each cell contains the correlation between that pair. The diagonal is always 1 (each region is perfectly correlated with itself). This matrix is the <em>functional connectome</em>. It captures the full pattern of which regions co-activate with which others.</p>
+
+    <h3>What is a dissimilarity matrix?</h3>
+    <p>A simple transformation -- d = 1 - r -- converts correlations into distances. High correlation (r close to 1) becomes small distance (d close to 0), meaning the regions are representationally similar. Low or negative correlation becomes large distance. The upper triangle of this matrix, flattened into a single vector, is a compact fingerprint of the brain's representational geometry. These fingerprints can be compared across people, or between a brain and an artificial neural network.</p>
+
+    <h3>Key concepts at a glance</h3>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="concept-term">BOLD signal</div>
+        <div class="concept-def">Blood-Oxygen-Level-Dependent signal. fMRI's indirect measure of neural activity via blood oxygenation changes.</div>
       </div>
-      <div class="cell-info">
-        <div class="label">Selected pair</div>
-        <div class="value" id="cellInfo">V1 &#8596; mPFC -- 0.0000</div>
+      <div class="concept-card">
+        <div class="concept-term">Parcellation / Atlas</div>
+        <div class="concept-def">A map dividing the brain into discrete regions. Common: Schaefer (100-1000), AAL (116), DiFuMo (data-driven).</div>
       </div>
-      <canvas id="tsPlot" width="400" height="130"></canvas>
+      <div class="concept-card">
+        <div class="concept-term">Time series</div>
+        <div class="concept-def">A sequence of values over time -- one number per brain snapshot (TR). The raw material for connectivity analysis.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-term">Pearson r</div>
+        <div class="concept-def">Measures linear co-fluctuation. r=1: perfect sync. r=-1: perfect opposition. r=0: unrelated. Bounded [-1,+1].</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-term">Fisher z-transform</div>
+        <div class="concept-def">Converts bounded r to unbounded z via arctanh(r). Required for valid group statistics because raw r is skewed near bounds.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-term">Connectome</div>
+        <div class="concept-def">A complete map of brain connections. Functional: correlation matrix. Structural: white matter tract counts.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-term">RDM</div>
+        <div class="concept-def">Representational Dissimilarity Matrix. Distance version (d=1-r) of the connectome. Fingerprints representational geometry.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-term">TR (Repetition Time)</div>
+        <div class="concept-def">Time between fMRI snapshots, typically 0.5-3 seconds. More TRs = more data = more stable correlations.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-term">Confounds</div>
+        <div class="concept-def">Non-neural signals (head motion, heartbeat, breathing) that contaminate BOLD data. Removed before computing connectivity.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-term">NIfTI (.nii.gz)</div>
+        <div class="concept-def">Standard neuroimaging file format. 3D/4D voxel array + spatial header. Read by nibabel in Python.</div>
+      </div>
     </div>
 
-    <!-- Right: Explanation + controls -->
-    <div class="right-stack">
+    <div class="read-more">Further reading: <a href="https://nilearn.github.io/stable/connectivity/index.html">nilearn connectivity guide</a> | <a href="https://bids-specification.readthedocs.io/en/stable/">BIDS Specification</a></div>
+
+    <div style="text-align:center;margin-top:24px;">
+      <button class="action-btn" onclick="showPart(1)">Next: BIDS &amp; Connectivity &#8594;</button>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PART 2: CONNECTIVITY IN BIDS -->
+  <!-- ============================================================ -->
+  <div class="part-content" id="part1">
+
+    <h2>Connectivity in BIDS</h2>
+
+    <p>BIDS itself does not compute connectivity. BIDS is the filing system -- it standardizes how brain data is organized on disk so that analysis tools can find what they need automatically. Here is how the pieces fit together:</p>
+
+    <h3>The pipeline at a glance</h3>
+    <div class="pipeline">
+      <div class="pipe-step pipe-bids">Raw scan<br><span style="font-size:9px;opacity:0.7">DICOM files</span></div>
+      <span class="pipe-arrow">&#8594;</span>
+      <div class="pipe-step pipe-tool">Converter<br><span style="font-size:9px;opacity:0.7">dcm2niix</span></div>
+      <span class="pipe-arrow">&#8594;</span>
+      <div class="pipe-step pipe-bids">BIDS dataset<br><span style="font-size:9px;opacity:0.7">organized files</span></div>
+      <span class="pipe-arrow">&#8594;</span>
+      <div class="pipe-step pipe-tool">fMRIPrep<br><span style="font-size:9px;opacity:0.7">preprocessing</span></div>
+      <span class="pipe-arrow">&#8594;</span>
+      <div class="pipe-step pipe-bids">Derivatives<br><span style="font-size:9px;opacity:0.7">clean BOLD</span></div>
+      <span class="pipe-arrow">&#8594;</span>
+      <div class="pipe-step pipe-here">Connectivity<br><span style="font-size:9px;opacity:0.7">YOU ARE HERE</span></div>
+    </div>
+
+    <h3>Step 1 -- BIDS organizes the raw data</h3>
+    <p>Your fMRI scan comes off the scanner as a collection of DICOM files. BIDS converters (dcm2niix, HeuDiConv, ezBIDS) transform these into a standardized directory structure:</p>
+    <pre class="code-block">dataset/
+  sub-01/
+    anat/
+      sub-01_T1w.nii.gz              # anatomical scan
+    func/
+      sub-01_task-rest_bold.nii.gz    # functional scan (BOLD time series)
+      sub-01_task-rest_bold.json      # metadata (TR, echo time, etc.)</pre>
+    <p>Without BIDS, every lab stores data differently and every tool needs custom configuration. With BIDS, any tool can automatically locate the functional scan and read the TR from the JSON sideband.</p>
+
+    <h3>Step 2 -- BIDS Apps preprocess it</h3>
+    <p><a href="https://fmriprep.org/">fMRIPrep</a> (a BIDS App) takes this standardized input and produces preprocessed BOLD data -- motion-corrected, spatially normalized, with confound regressors computed. The output follows <em>BIDS Derivatives</em> conventions:</p>
+    <pre class="code-block">derivatives/fmriprep/
+  sub-01/func/
+    sub-01_task-rest_space-MNI_desc-preproc_bold.nii.gz
+    sub-01_task-rest_desc-confounds_timeseries.tsv</pre>
+
+    <h3>Step 3 -- Connectivity analysis consumes BIDS Derivatives</h3>
+    <p>This is where our module picks up. Tools like <a href="https://github.com/SIMEXP/giga_connectome">giga_connectome</a> or <a href="https://nilearn.github.io/">nilearn</a> take the preprocessed BOLD file, apply a parcellation atlas, extract regional time series, and compute the correlation matrix.</p>
+    <pre class="code-block"># How BIDS makes this possible -- no manual path configuration
+from bids import BIDSLayout
+layout = BIDSLayout('/path/to/dataset', derivatives=True)
+
+# PyBIDS finds the right file automatically
+bold_file = layout.get(subject='01', task='rest',
+                       space='MNI152NLin2009cAsym',
+                       desc='preproc', suffix='bold')[0]
+
+# Then nilearn does the connectivity analysis
+from nilearn import maskers, connectome
+atlas = datasets.fetch_atlas_schaefer_2018(n_rois=200)
+masker = maskers.NiftiLabelsMasker(atlas.maps)
+time_series = masker.fit_transform(bold_file)
+conn = connectome.ConnectivityMeasure(kind='correlation')
+matrix = conn.fit_transform([time_series])[0]</pre>
+
+    <h3>Which BIDS Apps handle connectivity?</h3>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="concept-term"><a href="https://github.com/SIMEXP/giga_connectome">giga_connectome</a></div>
+        <div class="concept-def">Takes fMRIPrep derivatives, applies parcellation, computes connectivity matrices. The most direct BIDS-to-connectome tool.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-term"><a href="https://connectome-mapper-3.readthedocs.io/">Connectome Mapper 3</a></div>
+        <div class="concept-def">Full pipeline from raw BIDS to multi-resolution connectomes (83 to 1015 regions). Covers functional and structural.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-term"><a href="https://nilearn.github.io/">nilearn</a></div>
+        <div class="concept-def">Python library (pip install, no Docker). Parcellation, time series extraction, connectivity matrices, visualization, GLM. Runs in Colab.</div>
+      </div>
+      <div class="concept-card">
+        <div class="concept-term"><a href="https://bids-standard.github.io/pybids/">PyBIDS</a></div>
+        <div class="concept-def">Query engine for BIDS datasets. Finds files by subject, task, space, description. The bridge between BIDS organization and analysis code.</div>
+      </div>
+    </div>
+
+    <h3>Without Docker?</h3>
+    <p>Every tool listed above is installable with <code>pip install</code>. The Docker containers that BIDS Apps use are convenience packaging -- they bundle dependencies to avoid version conflicts. But the underlying code is Python. For connectivity analysis specifically, you need only: <code>pip install nilearn nibabel pybids</code>. That is what this tutorial demonstrates.</p>
+
+    <div class="read-more">Further reading: <a href="https://github.com/Starborn/BIDS/blob/main/ToolsGuideTutorial.md">Full BIDS Tools Guide</a> | <a href="https://bids-standard.github.io/awesome-bids/">Awesome BIDS</a></div>
+
+    <div style="text-align:center;margin-top:24px;">
+      <button class="action-btn-secondary" onclick="showPart(0)">&#8592; Back: The Science</button>
+      <button class="action-btn" onclick="showPart(2)" style="margin-left:12px;">Next: Interactive Tutorial &#8594;</button>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PART 3: INTERACTIVE TUTORIAL -->
+  <!-- ============================================================ -->
+  <div class="part-content" id="part2">
+
+    <h2>Interactive Tutorial</h2>
+    <p>Explore functional connectivity hands-on. Load sample data or upload your own, then interact with the visualization to understand what each element shows.</p>
+
+    <!-- Data source -->
+    <div class="panel" style="margin-bottom:20px;">
+      <div class="section-label">DATA SOURCE</div>
+      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;">
+        <button class="action-btn" id="loadSampleBtn" onclick="loadSampleData()">Load simulated data</button>
+        <label class="action-btn-secondary upload-label" style="display:inline-flex;align-items:center;cursor:pointer;">
+          Upload CSV (matrix or time series)
+          <input type="file" accept=".csv,.tsv,.txt" onchange="handleUpload(event)" style="display:none;">
+        </label>
+        <button class="action-btn-secondary" onclick="exportCSV()">Export matrix as CSV</button>
+      </div>
+      <p style="margin-top:12px;font-size:12px;color:#5a6a7e;" id="dataStatus">No data loaded. Click "Load simulated data" to begin.</p>
+    </div>
+
+    <!-- Step nav -->
+    <nav class="steps" id="stepNav"></nav>
+
+    <!-- Main interactive -->
+    <div class="main-grid" id="interactiveArea" style="display:none;">
+      <!-- Left: Visualization -->
       <div class="panel">
-        <h3 id="stepTitle"></h3>
-        <p class="science-text" id="stepScience"></p>
-        <div class="section-label">THE MATH</div>
-        <div class="math-block" id="stepMath"></div>
+        <canvas id="heatmap" width="340" height="340" style="cursor:crosshair;margin-bottom:12px;"></canvas>
+        <div class="color-legend">
+          <span class="color-label">-1</span>
+          <div class="color-bar"></div>
+          <span class="color-label">+1</span>
+          <span class="color-label" id="scaleLabel" style="margin-left:8px">Pearson r</span>
+        </div>
+        <div class="cell-info">
+          <div class="label">Selected pair</div>
+          <div class="value" id="cellInfo">Click a cell to select</div>
+        </div>
+        <canvas id="tsPlot" width="400" height="130"></canvas>
       </div>
 
-      <div class="panel" style="padding:16px 24px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span class="section-label">Python / nilearn</span>
-          <button class="toggle-btn" id="codeToggle" onclick="toggleCode()">show code</button>
+      <!-- Right: Explanation + controls -->
+      <div class="right-stack">
+        <div class="panel">
+          <h3 id="stepTitle"></h3>
+          <p id="stepScience" style="margin-bottom:12px;"></p>
+          <div class="section-label">THE MATH</div>
+          <div class="math-block" id="stepMath"></div>
         </div>
-        <pre class="code-block" id="codeBlock" style="display:none;margin-top:12px;"></pre>
-      </div>
 
-      <div class="panel" style="padding:20px;">
-        <div class="section-label" style="margin-bottom:14px;">PARAMETERS</div>
-        <div style="margin-bottom:16px;">
-          <div class="control-row">
-            <span class="control-label">Time points (TRs)</span>
-            <span class="control-value" id="tpValue">100</span>
+        <div class="panel" style="padding:16px 24px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="section-label">Python / nilearn</span>
+            <button class="toggle-btn" id="codeToggle" onclick="toggleCode()">show code</button>
           </div>
-          <input type="range" class="control-slider" id="tpSlider" min="20" max="500" value="100" oninput="updateParams()">
-          <div class="control-hint">More time points = more stable correlations (law of large numbers)</div>
-        </div>
-        <div style="margin-bottom:16px;">
-          <div class="control-row">
-            <span class="control-label">Random seed</span>
-            <span class="control-value" id="seedValue">42</span>
+          <pre class="code-block" id="codeBlock" style="display:none;margin-top:12px;"></pre>
+          <div id="bidsCodeBlock" style="display:none;margin-top:8px;">
+            <div class="section-label" style="margin-top:8px;">WITH BIDS (real data)</div>
+            <pre class="code-block" id="bidsCode"></pre>
           </div>
-          <input type="range" class="control-slider" id="seedSlider" min="1" max="100" value="42" oninput="updateParams()">
-          <div class="control-hint">Different seeds = different "subjects" (simulated individual variation)</div>
         </div>
-        <button class="toggle-btn" id="fisherToggle" onclick="toggleFisher()">Fisher z-transform: OFF</button>
+
+        <div class="panel" style="padding:20px;">
+          <div class="section-label" style="margin-bottom:14px;">PARAMETERS</div>
+          <div style="margin-bottom:16px;">
+            <div class="control-row">
+              <span class="control-label">Time points (TRs)</span>
+              <span class="control-value" id="tpValue">100</span>
+            </div>
+            <input type="range" class="control-slider" id="tpSlider" min="20" max="500" value="100" oninput="updateParams()">
+            <div class="control-hint">More time points = more stable correlations</div>
+          </div>
+          <div style="margin-bottom:16px;">
+            <div class="control-row">
+              <span class="control-label">Random seed</span>
+              <span class="control-value" id="seedValue">42</span>
+            </div>
+            <input type="range" class="control-slider" id="seedSlider" min="1" max="100" value="42" oninput="updateParams()">
+            <div class="control-hint">Different seeds = different "subjects"</div>
+          </div>
+          <button class="toggle-btn" id="fisherToggle" onclick="toggleFisher()">Fisher z-transform: OFF</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- RDM connection -->
-  <div class="panel rdm-panel">
-    <div class="rdm-grid">
-      <div class="rdm-text">
-        <h3>From Connectome to Dissimilarity Matrix</h3>
-        <p>The connectivity matrix above is one step from a representational dissimilarity matrix (RDM).
-        By computing d = 1 - r for each pair, correlations become distances. The upper triangle of this
-        distance matrix, flattened into a vector, is the <em>condensed dissimilarity vector</em> --
-        a compact fingerprint of this brain's representational geometry. For 20 regions, that is 190 unique
-        values. For a full 300-parcel atlas, it is 44,850 values -- but the principle is identical.
-        These condensed vectors can be compared across subjects, or between a biological brain and an
-        artificial neural network, using second-order correlation.</p>
-      </div>
-      <div class="rdm-box">
-        <div style="color:#5a6a7e;margin-bottom:8px;font-size:10px;">CONDENSED VECTOR</div>
+    <!-- Graph metrics -->
+    <div class="panel" id="metricsPanel" style="display:none;margin-top:20px;">
+      <div class="section-label">NETWORK METRICS</div>
+      <p style="font-size:12px;margin:8px 0;">Computed from the current connectivity matrix. These graph-theoretic measures characterize the brain's network architecture.</p>
+      <div class="metrics-row" id="metricsRow"></div>
+    </div>
+
+    <!-- RDM panel -->
+    <div class="panel" id="rdmPanel" style="display:none;margin-top:20px;">
+      <h3>From Connectome to Dissimilarity Matrix</h3>
+      <p>The connectivity matrix above is one step from a representational dissimilarity matrix (RDM). By computing d = 1 - r for each pair, correlations become distances. The upper triangle, flattened into a vector, is the <em>condensed dissimilarity vector</em> -- a compact fingerprint of the brain's representational geometry. For 20 regions, that is 190 unique values.</p>
+      <div class="panel-dark" style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11px;">
+        <div style="color:#5a6a7e;margin-bottom:8px;font-size:10px;">CONDENSED VECTOR (first 12 values)</div>
         <div id="condensedPreview" style="color:#C4A882;line-height:1.8;"></div>
-        <div style="color:#5a6a7e;margin-top:6px;font-size:10px;">190 unique values</div>
       </div>
     </div>
-  </div>
 
-  <!-- Glossary -->
-  <div class="panel glossary">
-    <h3>Key Terms</h3>
-    <div class="glossary-grid">
-      <div class="glossary-item">
-        <div class="glossary-term">BOLD signal</div>
-        <div class="glossary-def">Blood-Oxygen-Level-Dependent signal. fMRI measures changes in blood oxygenation as a proxy for neural activity. Active neurons consume oxygen, triggering increased blood flow.</div>
-      </div>
-      <div class="glossary-item">
-        <div class="glossary-term">Parcellation / Atlas</div>
-        <div class="glossary-def">A division of the brain into discrete regions (parcels). Common atlases: Schaefer (100-1000 parcels), AAL (116 regions), DiFuMo (data-driven). Each parcel gets one averaged time series.</div>
-      </div>
-      <div class="glossary-item">
-        <div class="glossary-term">Pearson correlation (r)</div>
-        <div class="glossary-def">Measures linear co-fluctuation between two signals. r = 1 means perfectly in sync, r = -1 means perfectly anti-correlated, r = 0 means unrelated. Range: [-1, +1].</div>
-      </div>
-      <div class="glossary-item">
-        <div class="glossary-term">Fisher z-transform</div>
-        <div class="glossary-def">Converts bounded correlations [-1, +1] to an unbounded normal scale via z = arctanh(r). Required for valid group-level statistics because raw r values are skewed near the bounds.</div>
-      </div>
-      <div class="glossary-item">
-        <div class="glossary-term">Connectome</div>
-        <div class="glossary-def">A complete map of neural connections. A functional connectome is an N x N matrix of pairwise correlations between all brain regions. A structural connectome counts physical white matter tracts.</div>
-      </div>
-      <div class="glossary-item">
-        <div class="glossary-term">RDM (Representational Dissimilarity Matrix)</div>
-        <div class="glossary-def">A distance matrix (d = 1 - r) encoding how differently brain regions process information. The upper triangle, flattened, is a condensed vector that fingerprints a brain's representational geometry.</div>
-      </div>
-      <div class="glossary-item">
-        <div class="glossary-term">TR (Repetition Time)</div>
-        <div class="glossary-def">The time between consecutive fMRI volume acquisitions, typically 0.5-3 seconds. Determines the temporal resolution of the BOLD time series. More TRs = longer scan = more stable statistics.</div>
-      </div>
-      <div class="glossary-item">
-        <div class="glossary-term">Confound / Nuisance regressor</div>
-        <div class="glossary-def">Non-neural signal sources (head motion, heartbeat, breathing, scanner drift) that contaminate BOLD data. Removed during preprocessing by regression, before computing connectivity.</div>
-      </div>
-      <div class="glossary-item">
-        <div class="glossary-term">Docker / Singularity</div>
-        <div class="glossary-def">Container technologies that package software with all dependencies. BIDS Apps use Docker for reproducibility, but the underlying tools (nilearn, nibabel, MNE) run without containers via pip install.</div>
-      </div>
-      <div class="glossary-item">
-        <div class="glossary-term">NIfTI (.nii / .nii.gz)</div>
-        <div class="glossary-def">The standard file format for neuroimaging data. A 3D or 4D array of voxel intensities plus a header encoding spatial orientation. Read/written by nibabel in Python.</div>
-      </div>
+    <!-- What you can do -->
+    <div class="panel" style="margin-top:20px;" id="guidePanel">
+      <h3>What you can do with this module</h3>
+      <p><em>Explore network structure:</em> Click within a diagonal block (e.g., V1 to V2, both in the Visual network) and see high correlation and tracking time series. Then click across blocks (e.g., V1 to mPFC, different networks) and see lower correlation. This demonstrates that the brain's network organization is visible in its correlation structure.</p>
+      <p><em>Test the effect of scan length:</em> Drag the time points slider from 20 to 500. With few time points the matrix looks noisy. With many, the block structure becomes crisp. This is why longer scans give more reliable connectivity estimates.</p>
+      <p><em>Simulate different subjects:</em> Change the random seed. The overall network structure stays stable but specific values shift -- demonstrating individual variation within shared architecture.</p>
+      <p><em>Toggle Fisher z-transform:</em> Switch it on and notice values can now exceed 1 or go below -1. The matrix pattern looks similar but the scale changes -- this is the transformation needed for valid group statistics.</p>
+      <p><em>Upload your own data:</em> Click "Upload CSV" to load a pre-computed correlation matrix (N x N, comma-separated) or raw time series (timepoints x regions). The module will visualize it using the same tools.</p>
+      <p><em>Export results:</em> Click "Export matrix as CSV" to download the current connectivity matrix for use in other tools.</p>
+      <p style="font-size:12px;color:#5a6a7e;margin-top:12px;">Note: This module uses simulated data for learning. In a real analysis, you would load preprocessed BOLD data from a BIDS dataset using PyBIDS and nilearn, as shown in Part 2.</p>
     </div>
   </div>
 
@@ -308,13 +504,7 @@
 // DATA & COMPUTATION
 // ============================================================
 
-const REGION_LABELS = [
-  "V1", "V2", "V3", "V4", "MT",
-  "M1", "SMA", "PMC", "S1", "Cereb",
-  "mPFC", "PCC", "AG-L", "AG-R", "HPC",
-  "dlPFC-L", "dlPFC-R", "IPS-L", "IPS-R", "ACC"
-];
-
+const REGION_LABELS = ["V1","V2","V3","V4","MT","M1","SMA","PMC","S1","Cereb","mPFC","PCC","AG-L","AG-R","HPC","dlPFC-L","dlPFC-R","IPS-L","IPS-R","ACC"];
 const MODULES = [
   { name: "Visual", regions: [0,1,2,3,4], color: "#E8927C" },
   { name: "Motor", regions: [5,6,7,8,9], color: "#7CAABD" },
@@ -323,102 +513,99 @@ const MODULES = [
 ];
 
 const STEPS = [
-  {
-    title: "1. Extract Regional Time Series",
-    science: "The brain is divided into regions (parcels) using an atlas. For each region, we average the BOLD signal across all voxels within that parcel at each time point. This gives us one time series per brain region -- a simplified representation of that region's activity over time.",
-    math: "For region R with voxels {v_1, ..., v_k}:\n\nts_R(t) = (1/k) * sum_{i=1}^{k} BOLD(v_i, t)\n\nThis averaging reduces noise (individual voxels are noisy)\nand compresses data from ~100,000 voxels to ~20-1000 regions.",
-    code: `from nilearn import datasets, maskers\natlas = datasets.fetch_atlas_schaefer_2018(n_rois=200)\nmasker = maskers.NiftiLabelsMasker(atlas.maps)\ntime_series = masker.fit_transform(fmri_img)\n# Result: (n_timepoints, 200) array`
-  },
-  {
-    title: "2. Compute Pairwise Correlations",
-    science: "For every pair of regions, we compute how similarly their time series fluctuate. If two regions consistently activate and deactivate together, they are 'functionally connected.' The result is a symmetric matrix where each cell represents the connection strength between two regions.",
-    math: "Pearson correlation between regions i and j:\n\nr_ij = cov(ts_i, ts_j) / (sigma_i * sigma_j)\n\nRange: -1 (anti-correlated) to +1 (perfectly correlated)\nDiagonal is always 1 (each region correlates with itself)",
-    code: `from nilearn.connectome import ConnectivityMeasure\nconn = ConnectivityMeasure(kind='correlation')\nmatrix = conn.fit_transform([time_series])[0]\n# Result: (200, 200) symmetric correlation matrix`
-  },
-  {
-    title: "3. Fisher Z-Transform",
-    science: "Raw correlations are bounded between -1 and +1, making their distribution skewed. The Fisher z-transform stretches them onto an unbounded scale where they become approximately normally distributed. This is essential for valid statistical comparisons across subjects.",
-    math: "Fisher z-transform:\n\nz_ij = 0.5 * ln((1 + r_ij) / (1 - r_ij))\n\nThis is the inverse hyperbolic tangent (arctanh).\nIt makes the sampling distribution approximately normal\nwith known variance 1/(n-3), enabling standard tests.",
-    code: `import numpy as np\nz_matrix = np.arctanh(matrix)\n# Or equivalently:\nz_matrix = 0.5 * np.log((1 + matrix) / (1 - matrix))`
-  },
-  {
-    title: "4. Interpret as Dissimilarity Matrix",
-    science: "A connectivity matrix encodes the geometry of neural representations. By converting correlations to distances (1 - r), we get a representational dissimilarity matrix (RDM). This captures how differently brain regions process information -- the foundation for Representational Similarity Analysis (RSA) and the bridge to comparing brains with artificial neural networks.",
-    math: "Dissimilarity from correlation:\n\nd_ij = 1 - r_ij\n\nThe condensed form (upper triangle) has N*(N-1)/2 values.\nFor 20 regions: 190 values. For 300 parcels: 44,850.\n\nThese vectors can be compared across subjects or\nbetween brains and ANNs using second-order correlation.",
-    code: `from scipy.spatial.distance import squareform\ndissimilarity = 1 - matrix\ncondensed = squareform(dissimilarity)\n# Result: vector of N*(N-1)/2 unique distances`
-  }
+  { title: "1. Extract Regional Time Series",
+    science: "The brain is divided into regions using an atlas. For each region, we average the BOLD signal across all voxels within that parcel at each time point. This gives one time series per brain region.",
+    math: "For region R with voxels {v_1, ..., v_k}:\n\nts_R(t) = (1/k) * sum BOLD(v_i, t)\n\nThis averaging reduces noise and compresses\ndata from ~100,000 voxels to ~20-1000 regions.",
+    code: "from nilearn import datasets, maskers\natlas = datasets.fetch_atlas_schaefer_2018(n_rois=200)\nmasker = maskers.NiftiLabelsMasker(atlas.maps)\ntime_series = masker.fit_transform(fmri_img)\n# Result: (n_timepoints, 200) array",
+    bids: "from bids import BIDSLayout\nlayout = BIDSLayout('dataset/', derivatives=True)\nbold = layout.get(subject='01', task='rest',\n    space='MNI152NLin2009cAsym',\n    desc='preproc', suffix='bold')[0]\ntime_series = masker.fit_transform(bold.path)" },
+  { title: "2. Compute Pairwise Correlations",
+    science: "For every pair of regions, compute how similarly their time series fluctuate. If two regions consistently activate together, they are functionally connected. The result is a symmetric N x N matrix.",
+    math: "Pearson correlation:\n\nr_ij = cov(ts_i, ts_j) / (sigma_i * sigma_j)\n\nRange: -1 (anti-correlated) to +1 (perfectly correlated)\nDiagonal: always 1",
+    code: "from nilearn.connectome import ConnectivityMeasure\nconn = ConnectivityMeasure(kind='correlation')\nmatrix = conn.fit_transform([time_series])[0]\n# Result: (200, 200) symmetric matrix",
+    bids: "# Same code -- nilearn works on the extracted\n# time series regardless of data source" },
+  { title: "3. Fisher Z-Transform",
+    science: "Raw correlations are bounded [-1, +1], making their distribution skewed. The Fisher z-transform stretches them onto an unbounded normal scale. Essential for valid statistical comparisons across subjects.",
+    math: "Fisher z-transform:\n\nz_ij = 0.5 * ln((1 + r_ij) / (1 - r_ij))\n\n= arctanh(r_ij)\n\nSampling variance: 1/(n-3)",
+    code: "import numpy as np\nz_matrix = np.arctanh(matrix)",
+    bids: "# Fisher z is a pure math operation,\n# independent of data source" },
+  { title: "4. Interpret as Dissimilarity Matrix",
+    science: "Converting correlations to distances (d = 1 - r) yields a representational dissimilarity matrix. The condensed upper triangle is a fingerprint of the brain's representational geometry, comparable across subjects and between brains and artificial neural networks.",
+    math: "Dissimilarity:\n\nd_ij = 1 - r_ij\n\nCondensed form: N*(N-1)/2 unique values\n20 regions: 190 values\n300 parcels: 44,850 values",
+    code: "from scipy.spatial.distance import squareform\ndissimilarity = 1 - matrix\ncondensed = squareform(dissimilarity)\n# Vector of N*(N-1)/2 distances",
+    bids: "# Condensed vectors enable comparison:\n# corr(condensed_brain, condensed_ANN)\n# = second-order similarity" }
 ];
 
-// State
-let nTimepoints = 100;
-let seed = 42;
-let useFisherZ = false;
-let currentStep = 0;
+let nTimepoints = 100, seed = 42, useFisherZ = false, currentStep = 0;
 let selectedCell = [0, 10];
-let timeSeries = [];
-let connectome = [];
+let timeSeries = [], connectome = [], regionLabels = REGION_LABELS.slice(), modules = MODULES;
+let dataLoaded = false, isUploadedData = false;
 
-// PRNG
-function mulberry32(a) {
-  return function() {
-    a |= 0; a = a + 0x6D2B79F5 | 0;
-    let t = Math.imul(a ^ a >>> 15, 1 | a);
-    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  };
-}
-
-function gaussianRng(rng) {
-  let u = 0, v = 0;
-  while (u === 0) u = rng();
-  while (v === 0) v = rng();
-  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-}
+function mulberry32(a) { return function() { a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}; }
+function gaussianRng(rng) { let u=0,v=0;while(u===0)u=rng();while(v===0)v=rng();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
 
 function generateData() {
   const rng = mulberry32(seed);
-  const moduleSignals = MODULES.map(() => {
-    const sig = [];
-    for (let t = 0; t < nTimepoints; t++) sig.push(gaussianRng(rng) * 2);
-    return sig;
-  });
-  const globalSignal = [];
-  for (let t = 0; t < nTimepoints; t++) globalSignal.push(gaussianRng(rng) * 0.5);
-
+  const modSigs = MODULES.map(() => { const s=[]; for(let t=0;t<nTimepoints;t++) s.push(gaussianRng(rng)*2); return s; });
+  const glob = []; for(let t=0;t<nTimepoints;t++) glob.push(gaussianRng(rng)*0.5);
   timeSeries = [];
-  for (let r = 0; r < 20; r++) {
-    const ts = [];
-    const mi = MODULES.findIndex(m => m.regions.includes(r));
-    for (let t = 0; t < nTimepoints; t++) {
-      let val = globalSignal[t];
-      if (mi >= 0) val += moduleSignals[mi][t] * 0.8;
-      val += gaussianRng(rng) * 1.2;
-      ts.push(val);
-    }
+  for(let r=0;r<20;r++) {
+    const ts=[]; const mi=MODULES.findIndex(m=>m.regions.includes(r));
+    for(let t=0;t<nTimepoints;t++) { let v=glob[t]; if(mi>=0)v+=modSigs[mi][t]*0.8; v+=gaussianRng(rng)*1.2; ts.push(v); }
     timeSeries.push(ts);
   }
-
-  // Compute connectome
-  connectome = [];
-  for (let i = 0; i < 20; i++) {
-    connectome[i] = [];
-    for (let j = 0; j < 20; j++) {
-      let r = pearson(timeSeries[i], timeSeries[j]);
-      if (useFisherZ && i !== j) r = Math.min(Math.max(r, -0.9999), 0.9999), r = 0.5 * Math.log((1 + r) / (1 - r));
-      connectome[i][j] = r;
-    }
-  }
+  computeConnectome();
 }
 
-function pearson(x, y) {
-  const n = x.length;
-  let sx = 0, sy = 0, sxy = 0, sx2 = 0, sy2 = 0;
-  for (let i = 0; i < n; i++) {
-    sx += x[i]; sy += y[i]; sxy += x[i]*y[i]; sx2 += x[i]*x[i]; sy2 += y[i]*y[i];
+function pearson(x,y) {
+  const n=x.length; let sx=0,sy=0,sxy=0,sx2=0,sy2=0;
+  for(let i=0;i<n;i++){sx+=x[i];sy+=y[i];sxy+=x[i]*y[i];sx2+=x[i]*x[i];sy2+=y[i]*y[i];}
+  const num=n*sxy-sx*sy,den=Math.sqrt((n*sx2-sx*sx)*(n*sy2-sy*sy));
+  return den===0?0:num/den;
+}
+
+function computeConnectome() {
+  const n = timeSeries.length;
+  connectome = [];
+  for(let i=0;i<n;i++) { connectome[i]=[]; for(let j=0;j<n;j++) {
+    let r=pearson(timeSeries[i],timeSeries[j]);
+    if(useFisherZ&&i!==j){r=Math.max(-0.9999,Math.min(0.9999,r));r=0.5*Math.log((1+r)/(1-r));}
+    connectome[i][j]=r;
+  }}
+  computeMetrics();
+}
+
+function computeMetrics() {
+  const n = connectome.length;
+  const threshold = 0.3;
+  let totalEdges=0, totalDeg=0, clusterSum=0, clusterCount=0;
+  const degrees = [];
+  for(let i=0;i<n;i++) {
+    let d=0; for(let j=0;j<n;j++) if(i!==j && Math.abs(connectome[i][j])>threshold) d++;
+    degrees.push(d); totalDeg+=d;
+    if(i<n) for(let j=i+1;j<n;j++) if(Math.abs(connectome[i][j])>threshold) totalEdges++;
   }
-  const num = n * sxy - sx * sy;
-  const den = Math.sqrt((n * sx2 - sx * sx) * (n * sy2 - sy * sy));
-  return den === 0 ? 0 : num / den;
+  for(let i=0;i<n;i++) {
+    if(degrees[i]<2) continue;
+    const neighbors=[]; for(let j=0;j<n;j++) if(i!==j && Math.abs(connectome[i][j])>threshold) neighbors.push(j);
+    let triEdges=0;
+    for(let a=0;a<neighbors.length;a++) for(let b=a+1;b<neighbors.length;b++)
+      if(Math.abs(connectome[neighbors[a]][neighbors[b]])>threshold) triEdges++;
+    clusterSum += 2*triEdges/(degrees[i]*(degrees[i]-1));
+    clusterCount++;
+  }
+  const avgDeg = totalDeg/n;
+  const avgClust = clusterCount>0 ? clusterSum/clusterCount : 0;
+  const density = 2*totalEdges/(n*(n-1));
+  const allVals = []; for(let i=0;i<n;i++) for(let j=i+1;j<n;j++) allVals.push(connectome[i][j]);
+  const mean = allVals.reduce((a,b)=>a+b,0)/allVals.length;
+
+  const html = `
+    <div class="metric-card"><div class="metric-label">AVG DEGREE</div><div class="metric-value">${avgDeg.toFixed(1)}</div><div class="metric-hint">Connections per region (|r|>${threshold})</div></div>
+    <div class="metric-card"><div class="metric-label">CLUSTERING</div><div class="metric-value">${avgClust.toFixed(3)}</div><div class="metric-hint">How much neighbors connect to each other</div></div>
+    <div class="metric-card"><div class="metric-label">DENSITY</div><div class="metric-value">${(density*100).toFixed(1)}%</div><div class="metric-hint">Fraction of possible edges present</div></div>
+    <div class="metric-card"><div class="metric-label">MEAN r</div><div class="metric-value">${mean.toFixed(3)}</div><div class="metric-hint">Average off-diagonal correlation</div></div>
+  `;
+  document.getElementById('metricsRow').innerHTML = html;
 }
 
 // ============================================================
@@ -426,229 +613,196 @@ function pearson(x, y) {
 // ============================================================
 
 function colorScale(val) {
-  if (val >= 0) {
-    const t = Math.min(val, 1);
-    return `rgb(${Math.round(40+t*188)},${Math.round(40+t*70)},${Math.round(50+t*24)})`;
-  } else {
-    const t = Math.min(Math.abs(val), 1);
-    return `rgb(${Math.round(40+t*44)},${Math.round(40+t*110)},${Math.round(50+t*139)})`;
-  }
+  if(val>=0){const t=Math.min(val,1);return `rgb(${Math.round(40+t*188)},${Math.round(40+t*70)},${Math.round(50+t*24)})`;}
+  else{const t=Math.min(Math.abs(val),1);return `rgb(${Math.round(40+t*44)},${Math.round(40+t*110)},${Math.round(50+t*139)})`;}
 }
 
 function drawHeatmap() {
-  const canvas = document.getElementById('heatmap');
-  const ctx = canvas.getContext('2d');
-  const size = 340;
-  const margin = 50;
-  const cellSize = (size - margin) / 20;
-
-  ctx.clearRect(0, 0, size, size);
-
-  // Module brackets
-  MODULES.forEach(mod => {
-    const y1 = margin + mod.regions[0] * cellSize;
-    const y2 = margin + (mod.regions[mod.regions.length - 1] + 1) * cellSize;
-    ctx.strokeStyle = mod.color;
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(margin - 8, y1); ctx.lineTo(margin - 8, y2);
-    ctx.stroke();
-
-    ctx.fillStyle = mod.color;
-    ctx.font = "500 8px 'DM Sans'";
-    ctx.textAlign = "right";
-    ctx.fillText(mod.name, margin - 12, (y1 + y2) / 2 + 3);
-  });
-
-  // Cells
-  for (let i = 0; i < 20; i++) {
-    for (let j = 0; j < 20; j++) {
-      const x = margin + j * cellSize;
-      const y = margin + i * cellSize;
-      ctx.fillStyle = colorScale(connectome[i][j]);
-      ctx.fillRect(x, y, cellSize, cellSize);
-
-      if (selectedCell && selectedCell[0] === i && selectedCell[1] === j) {
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 1.5;
-        ctx.strokeRect(x, y, cellSize, cellSize);
-      }
-    }
+  const canvas=document.getElementById('heatmap'),ctx=canvas.getContext('2d');
+  const n=connectome.length,size=340,margin=50,cellSize=(size-margin)/n;
+  ctx.clearRect(0,0,size,size);
+  if(!isUploadedData) {
+    MODULES.forEach(mod=>{
+      const y1=margin+mod.regions[0]*cellSize,y2=margin+(mod.regions[mod.regions.length-1]+1)*cellSize;
+      ctx.strokeStyle=mod.color;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(margin-8,y1);ctx.lineTo(margin-8,y2);ctx.stroke();
+      ctx.fillStyle=mod.color;ctx.font="500 8px 'DM Sans'";ctx.textAlign="right";ctx.fillText(mod.name,margin-12,(y1+y2)/2+3);
+    });
   }
-
-  // Top labels
-  ctx.fillStyle = "#8a9bb0";
-  ctx.font = "7px 'JetBrains Mono'";
-  ctx.textAlign = "right";
-  REGION_LABELS.forEach((label, i) => {
-    ctx.save();
-    ctx.translate(margin + i * cellSize + cellSize / 2, margin - 4);
-    ctx.rotate(-Math.PI / 4);
-    ctx.fillText(label, 0, 0);
-    ctx.restore();
-  });
+  for(let i=0;i<n;i++) for(let j=0;j<n;j++){
+    ctx.fillStyle=colorScale(connectome[i][j]);ctx.fillRect(margin+j*cellSize,margin+i*cellSize,cellSize,cellSize);
+    if(selectedCell&&selectedCell[0]===i&&selectedCell[1]===j){ctx.strokeStyle="#fff";ctx.lineWidth=1.5;ctx.strokeRect(margin+j*cellSize,margin+i*cellSize,cellSize,cellSize);}
+  }
+  ctx.fillStyle="#8a9bb0";ctx.font="7px 'JetBrains Mono'";ctx.textAlign="right";
+  regionLabels.slice(0,n).forEach((label,i)=>{ctx.save();ctx.translate(margin+i*cellSize+cellSize/2,margin-4);ctx.rotate(-Math.PI/4);ctx.fillText(label,0,0);ctx.restore();});
 }
 
 function drawTimeSeries() {
-  const canvas = document.getElementById('tsPlot');
-  const ctx = canvas.getContext('2d');
-  const w = 400, h = 130;
-  ctx.clearRect(0, 0, w, h);
-
-  const [h1, h2] = selectedCell;
-  const ts1 = timeSeries[h1];
-  const ts2 = timeSeries[h2];
-  const nT = ts1.length;
-
-  const mod1 = MODULES.find(m => m.regions.includes(h1));
-  const mod2 = MODULES.find(m => m.regions.includes(h2));
-
-  const maxVal = Math.max(...ts1.map(Math.abs), ...ts2.map(Math.abs)) * 1.1;
-
-  // Center line
-  ctx.strokeStyle = "#2a3444"; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(50, h/2); ctx.lineTo(w-15, h/2); ctx.stroke();
-
-  // Labels
-  ctx.fillStyle = "#8a9bb0"; ctx.font = "8px 'JetBrains Mono'"; ctx.textAlign = "right";
-  ctx.fillText("+" + maxVal.toFixed(1), 45, 15);
-  ctx.fillText("-" + maxVal.toFixed(1), 45, h - 5);
-
-  const r = pearson(timeSeries[h1], timeSeries[h2]);
-  ctx.fillStyle = "#8a9bb0"; ctx.font = "9px 'DM Sans'"; ctx.textAlign = "center";
-  ctx.fillText("Time (TR) -- r = " + r.toFixed(3), w/2, h + 15);
-
-  // Draw lines
-  function drawLine(ts, color) {
-    ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.85;
-    ctx.beginPath();
-    ts.forEach((v, t) => {
-      const x = 50 + (t / (nT - 1)) * (w - 70);
-      const y = h/2 - (v / maxVal) * (h/2 - 15);
-      t === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-    ctx.globalAlpha = 1;
-  }
-
-  drawLine(ts1, mod1 ? mod1.color : "#E8927C");
-  drawLine(ts2, mod2 ? mod2.color : "#7CAABD");
-
-  // Legend
-  ctx.font = "9px 'JetBrains Mono'"; ctx.textAlign = "right";
-  ctx.fillStyle = mod1 ? mod1.color : "#E8927C";
-  ctx.fillText(REGION_LABELS[h1], w - 10, 15);
-  ctx.fillStyle = mod2 ? mod2.color : "#7CAABD";
-  ctx.fillText(REGION_LABELS[h2], w - 10, 27);
+  const canvas=document.getElementById('tsPlot'),ctx=canvas.getContext('2d'),w=400,h=130;
+  ctx.clearRect(0,0,w,h+20);
+  if(!timeSeries.length||!selectedCell) return;
+  const[h1,h2]=selectedCell,ts1=timeSeries[h1],ts2=timeSeries[h2];
+  if(!ts1||!ts2) return;
+  const nT=ts1.length,maxVal=Math.max(...ts1.map(Math.abs),...ts2.map(Math.abs))*1.1;
+  const mod1=MODULES.find(m=>m.regions.includes(h1)),mod2=MODULES.find(m=>m.regions.includes(h2));
+  ctx.strokeStyle="#2a3444";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(50,h/2);ctx.lineTo(w-15,h/2);ctx.stroke();
+  ctx.fillStyle="#8a9bb0";ctx.font="8px 'JetBrains Mono'";ctx.textAlign="right";
+  ctx.fillText("+"+maxVal.toFixed(1),45,15);ctx.fillText("-"+maxVal.toFixed(1),45,h-5);
+  const r=pearson(ts1,ts2);
+  ctx.fillStyle="#8a9bb0";ctx.font="9px 'DM Sans'";ctx.textAlign="center";ctx.fillText("Time (TR) -- r = "+r.toFixed(3),w/2,h+15);
+  function drawLine(ts,color){ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.globalAlpha=0.85;ctx.beginPath();
+    ts.forEach((v,t)=>{const x=50+(t/(nT-1))*(w-70),y=h/2-(v/maxVal)*(h/2-15);t===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();ctx.globalAlpha=1;}
+  drawLine(ts1,mod1?mod1.color:"#E8927C");drawLine(ts2,mod2?mod2.color:"#7CAABD");
+  ctx.font="9px 'JetBrains Mono'";ctx.textAlign="right";
+  ctx.fillStyle=mod1?mod1.color:"#E8927C";ctx.fillText(regionLabels[h1]||"R"+h1,w-10,15);
+  ctx.fillStyle=mod2?mod2.color:"#7CAABD";ctx.fillText(regionLabels[h2]||"R"+h2,w-10,27);
 }
 
-function updateCellInfo() {
-  const [i, j] = selectedCell;
-  const val = connectome[i][j];
-  const color = val > 0.3 ? "#E8927C" : val < -0.1 ? "#7CAABD" : "#5a6a7e";
-  document.getElementById('cellInfo').innerHTML =
-    REGION_LABELS[i] + " &#8596; " + REGION_LABELS[j] +
-    " <span style='color:" + color + ";margin-left:12px'>" + val.toFixed(4) + "</span>";
+function updateCellInfo(){
+  if(!selectedCell||!connectome.length) return;
+  const[i,j]=selectedCell,val=connectome[i][j];
+  const color=val>0.3?"#E8927C":val<-0.1?"#7CAABD":"#5a6a7e";
+  const l1=regionLabels[i]||"R"+i,l2=regionLabels[j]||"R"+j;
+  document.getElementById('cellInfo').innerHTML=l1+" &#8596; "+l2+" <span style='color:"+color+";margin-left:12px'>"+val.toFixed(4)+"</span>";
 }
 
-function updateCondensed() {
-  let vals = [];
-  for (let i = 0; i < 4; i++) {
-    for (let j = i + 1; j < Math.min(i + 3, 20); j++) {
-      vals.push((1 - connectome[i][j]).toFixed(3));
-    }
-  }
-  document.getElementById('condensedPreview').innerHTML =
-    vals.join(" ") + " <span style='color:#5a6a7e'>...</span>";
+function updateCondensed(){
+  if(!connectome.length) return;
+  let vals=[];const n=connectome.length;
+  for(let i=0;i<Math.min(4,n);i++) for(let j=i+1;j<Math.min(i+4,n);j++) vals.push((1-connectome[i][j]).toFixed(3));
+  document.getElementById('condensedPreview').innerHTML=vals.join(" ")+" <span style='color:#5a6a7e'>... ("+n*(n-1)/2+" total)</span>";
 }
 
 // ============================================================
 // UI
 // ============================================================
 
+function showPart(idx) {
+  document.querySelectorAll('.part-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.part-content').forEach((c,i)=>c.classList.toggle('active',i===idx));
+}
+
 function renderStepNav() {
-  const nav = document.getElementById('stepNav');
-  nav.innerHTML = STEPS.map((s, i) =>
-    `<button class="step-btn ${i === currentStep ? 'active' : ''}" onclick="setStep(${i})">${s.title}</button>`
+  document.getElementById('stepNav').innerHTML=STEPS.map((s,i)=>
+    `<button class="step-btn ${i===currentStep?'active':''}" onclick="setStep(${i})">${s.title}</button>`
   ).join('');
 }
 
 function renderStep() {
-  const step = STEPS[currentStep];
-  document.getElementById('stepTitle').textContent = step.title;
-  document.getElementById('stepScience').textContent = step.science;
-  document.getElementById('stepMath').textContent = step.math;
-  document.getElementById('codeBlock').textContent = step.code;
+  const s=STEPS[currentStep];
+  document.getElementById('stepTitle').textContent=s.title;
+  document.getElementById('stepScience').textContent=s.science;
+  document.getElementById('stepMath').textContent=s.math;
+  document.getElementById('codeBlock').textContent=s.code;
+  document.getElementById('bidsCode').textContent=s.bids;
 }
 
-function setStep(i) {
-  currentStep = i;
-  renderStepNav();
-  renderStep();
+function setStep(i){currentStep=i;renderStepNav();renderStep();}
+
+function toggleCode(){
+  const b=document.getElementById('codeBlock'),b2=document.getElementById('bidsCodeBlock'),btn=document.getElementById('codeToggle');
+  if(b.style.display==='none'){b.style.display='block';b2.style.display='block';btn.textContent='hide code';btn.classList.add('on');}
+  else{b.style.display='none';b2.style.display='none';btn.textContent='show code';btn.classList.remove('on');}
 }
 
-function toggleCode() {
-  const block = document.getElementById('codeBlock');
-  const btn = document.getElementById('codeToggle');
-  if (block.style.display === 'none') {
-    block.style.display = 'block';
-    btn.textContent = 'hide code';
-    btn.classList.add('on');
-  } else {
-    block.style.display = 'none';
-    btn.textContent = 'show code';
-    btn.classList.remove('on');
-  }
+function toggleFisher(){
+  useFisherZ=!useFisherZ;
+  document.getElementById('fisherToggle').textContent="Fisher z-transform: "+(useFisherZ?"ON":"OFF");
+  document.getElementById('fisherToggle').className="toggle-btn"+(useFisherZ?" on":"");
+  document.getElementById('scaleLabel').textContent=useFisherZ?"Fisher z":"Pearson r";
+  if(!isUploadedData) refresh(); else { computeConnectome(); drawAll(); }
 }
 
-function toggleFisher() {
-  useFisherZ = !useFisherZ;
-  const btn = document.getElementById('fisherToggle');
-  btn.textContent = "Fisher z-transform: " + (useFisherZ ? "ON" : "OFF");
-  btn.className = "toggle-btn" + (useFisherZ ? " on" : "");
-  document.getElementById('scaleLabel').textContent = useFisherZ ? "Fisher z" : "Pearson r";
-  refresh();
+function updateParams(){
+  nTimepoints=parseInt(document.getElementById('tpSlider').value);
+  seed=parseInt(document.getElementById('seedSlider').value);
+  document.getElementById('tpValue').textContent=nTimepoints;
+  document.getElementById('seedValue').textContent=seed;
+  if(!isUploadedData) refresh();
 }
 
-function updateParams() {
-  nTimepoints = parseInt(document.getElementById('tpSlider').value);
-  seed = parseInt(document.getElementById('seedSlider').value);
-  document.getElementById('tpValue').textContent = nTimepoints;
-  document.getElementById('seedValue').textContent = seed;
-  refresh();
-}
+function refresh(){generateData();drawAll();}
+function drawAll(){drawHeatmap();drawTimeSeries();updateCellInfo();updateCondensed();}
 
-function refresh() {
+function loadSampleData(){
+  isUploadedData=false;
+  regionLabels=REGION_LABELS.slice();
+  modules=MODULES;
+  selectedCell=[0,10];
   generateData();
-  drawHeatmap();
-  drawTimeSeries();
-  updateCellInfo();
-  updateCondensed();
+  showInteractive();
+  document.getElementById('dataStatus').textContent="Simulated data loaded: 20 regions, 4 networks, "+nTimepoints+" time points.";
+  document.getElementById('dataStatus').style.color="#9CB89C";
+}
+
+function showInteractive(){
+  dataLoaded=true;
+  document.getElementById('interactiveArea').style.display='grid';
+  document.getElementById('metricsPanel').style.display='block';
+  document.getElementById('rdmPanel').style.display='block';
+  renderStepNav();renderStep();drawAll();
+}
+
+function handleUpload(event){
+  const file=event.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const text=e.target.result;
+    const sep=text.includes('\t')?'\t':',';
+    const lines=text.trim().split('\n').filter(l=>l.trim());
+    const data=lines.map(l=>l.split(sep).map(Number));
+    const rows=data.length,cols=data[0].length;
+
+    if(Math.abs(rows-cols)<=1 && rows>3){
+      // Looks like a matrix
+      connectome=data;
+      timeSeries=[];
+      regionLabels=[];for(let i=0;i<rows;i++) regionLabels.push("R"+(i+1));
+      isUploadedData=true;
+      selectedCell=[0,1];
+      computeMetrics();
+      showInteractive();
+      document.getElementById('dataStatus').textContent="Uploaded matrix: "+rows+" x "+cols+" regions. Time series not available (matrix only).";
+      document.getElementById('dataStatus').style.color="#C4A882";
+    } else if(cols<rows){
+      // Looks like time series (timepoints x regions)
+      timeSeries=[];
+      for(let c=0;c<cols;c++){const ts=[];for(let r=0;r<rows;r++) ts.push(data[r][c]);timeSeries.push(ts);}
+      regionLabels=[];for(let i=0;i<cols;i++) regionLabels.push("R"+(i+1));
+      isUploadedData=true;
+      selectedCell=[0,1];
+      computeConnectome();
+      showInteractive();
+      document.getElementById('dataStatus').textContent="Uploaded time series: "+cols+" regions, "+rows+" time points. Connectome computed.";
+      document.getElementById('dataStatus').style.color="#9CB89C";
+    } else {
+      document.getElementById('dataStatus').textContent="Could not parse file. Expected: N x N matrix or timepoints x regions CSV.";
+      document.getElementById('dataStatus').style.color="#E8927C";
+    }
+  };
+  reader.readAsText(file);
+}
+
+function exportCSV(){
+  if(!connectome.length){alert("No data loaded.");return;}
+  let csv=regionLabels.slice(0,connectome.length).join(",")+"\n";
+  connectome.forEach((row,i)=>{csv+=row.map(v=>v.toFixed(6)).join(",")+"\n";});
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download="connectivity_matrix.csv";a.click();
 }
 
 // Heatmap click
-document.getElementById('heatmap').addEventListener('click', function(e) {
-  const rect = this.getBoundingClientRect();
-  const scaleX = 340 / rect.width;
-  const scaleY = 340 / rect.height;
-  const x = (e.clientX - rect.left) * scaleX - 50;
-  const y = (e.clientY - rect.top) * scaleY - 50;
-  const cellSize = (340 - 50) / 20;
-  const col = Math.floor(x / cellSize);
-  const row = Math.floor(y / cellSize);
-  if (row >= 0 && row < 20 && col >= 0 && col < 20) {
-    selectedCell = [row, col];
-    drawHeatmap();
-    drawTimeSeries();
-    updateCellInfo();
-  }
+document.getElementById('heatmap').addEventListener('click',function(e){
+  if(!connectome.length)return;
+  const rect=this.getBoundingClientRect(),n=connectome.length;
+  const scaleX=340/rect.width,scaleY=340/rect.height;
+  const x=(e.clientX-rect.left)*scaleX-50,y=(e.clientY-rect.top)*scaleY-50;
+  const cellSize=(340-50)/n,col=Math.floor(x/cellSize),row=Math.floor(y/cellSize);
+  if(row>=0&&row<n&&col>=0&&col<n){selectedCell=[row,col];drawAll();}
 });
 
-// Init
-renderStepNav();
-renderStep();
-refresh();
+// Init step nav
+renderStepNav();renderStep();
 </script>
-
 </body>
 </html>
