@@ -563,7 +563,7 @@ A browser-based learning environment where each neuroimaging analysis function c
 04  Tissue Segmentation        -- Gaussian mixtures, EM algorithm
 05  Motion Correction          -- Rigid-body registration, cost functions
 06  Spatial Normalization      -- Template spaces, deformation fields
-07  Functional Connectivity    -- Correlation matrices, parcellations [BUILT]
+07  Functional Connectivity    -- [Interactive module](https://starborn.github.io/BIDS/module-07-connectivity.html) [LIVE]
 08  GLM Activation Mapping     -- General Linear Model, statistical maps
 09  Structural Connectomes     -- Diffusion, tractography basics
 10  Graph Analysis             -- Network metrics, modularity
@@ -572,7 +572,8 @@ A browser-based learning environment where each neuroimaging analysis function c
 13  Dissimilarity Matrices     -- RSA, RDMs, condensed distance vectors
 ```
 
-Module 07 (Functional Connectivity) is built as an interactive React app: [bids-academy-connectivity.jsx](https://github.com/Starborn/BIDS)
+Module 07 (Functional Connectivity) is built 
+07  Functional Connectivity    -- [Interactive module](https://starborn.github.io/BIDS/module-07-connectivity.html) [LIVE]
 
 
 ### AIKR CG Contribution
