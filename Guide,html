@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIDS Specifications Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:ital,wght@0,300;0,700;1,300&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0f0a;
+    --surface: #141810;
+    --surface2: #1c211a;
+    --border: #2a3128;
+    --accent: #7ecb52;
+    --accent2: #4a9e6b;
+    --accent3: #c5e89d;
+    --text: #d8e8ce;
+    --text-dim: #7a9070;
+    --text-muted: #4a5c44;
+    --tag-mri: #2d5a3e;
+    --tag-eeg: #3a3060;
+    --tag-meg: #5a2d2d;
+    --tag-ieeg: #4a3a1a;
+    --tag-pet: #1a3a4a;
+    --tag-asl: #3a1a4a;
+    --tag-nirs: #1a4a3a;
+    --tag-micro: #4a2d1a;
+    --tag-qmri: #2d4a1a;
+    --tag-motion: #1a2d4a;
+    --tag-mrs: #4a1a2d;
+    --tag-emg: #3a4a1a;
+    --tag-genetics: #2d1a4a;
+    --tag-phys: #1a4a4a;
+    --tag-behav: #4a4a1a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 32px 48px 24px;
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .header-text { flex: 1; min-width: 240px; }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent3);
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .header-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: right;
+    padding-top: 4px;
+  }
+
+  .header-meta a { color: var(--accent2); text-decoration: none; }
+  .header-meta a:hover { color: var(--accent); }
+
+  /* FILTER BAR */
+  .filter-bar {
+    padding: 16px 48px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #0c0f0a;
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    padding: 32px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--accent3);
+  }
+
+  .section-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* SPEC CARDS GRID */
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(640px, 1fr));
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  .spec-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .spec-card:hover { border-color: var(--accent2); }
+
+  .spec-card-header {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .spec-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    min-width: 28px;
+    padding-top: 2px;
+  }
+
+  .spec-header-content { flex: 1; }
+
+  .spec-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .spec-fullname {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .spec-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  .tag-pub { background: var(--tag-mri); color: #7ecfa0; border: 1px solid #2d6a4a; }
+  .tag-modal { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+  .tag-year { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+
+  .spec-card-body { padding: 18px 22px; }
+
+  .spec-section { margin-bottom: 16px; }
+
+  .spec-section:last-child { margin-bottom: 0; }
+
+  .spec-section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .spec-section-content {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  .spec-link {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .spec-link:hover { color: var(--accent); text-decoration: underline; }
+
+  /* Apps list */
+  .apps-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .app-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 8px 12px;
+  }
+
+  .app-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--accent3);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .app-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* Use case block */
+  .usecase-block {
+    background: var(--surface2);
+    border-left: 3px solid var(--accent2);
+    border-radius: 0 2px 2px 0;
+    padding: 12px 16px;
+  }
+
+  .usecase-scenario {
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  .usecase-steps { list-style: none; }
+
+  .usecase-steps li {
+    font-size: 12px;
+    color: var(--text-dim);
+    padding: 2px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .usecase-steps li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 11px;
+  }
+
+  /* Repos */
+  .repos-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .repo-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 12px;
+  }
+
+  .repo-bullet {
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding-top: 1px;
+    min-width: 12px;
+  }
+
+  .repo-content { flex: 1; }
+
+  .repo-name {
+    color: var(--accent3);
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .repo-link {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--accent2);
+    text-decoration: none;
+  }
+
+  .repo-link:hover { color: var(--accent); text-decoration: underline; }
+
+  /* DIVIDER BETWEEN SECTIONS */
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 48px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  footer a { color: var(--accent2); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  /* Hidden class for filtering */
+  .spec-card.hidden { display: none; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-text">
+    <div class="eyebrow">Starborn / BIDS Reference</div>
+    <h1>BIDS Specifications<br>Complete Reference</h1>
+    <div class="subtitle">All modality specifications · tools · repositories · use cases — v1.11.1</div>
+  </div>
+  <div class="header-meta">
+    <span>Spec version: <strong style="color:var(--accent3)">1.11.1</strong></span>
+    <a href="https://bids-specification.readthedocs.io" target="_blank">bids-specification.readthedocs.io ↗</a>
+    <a href="https://bids.neuroimaging.io" target="_blank">bids.neuroimaging.io ↗</a>
+    <a href="https://github.com/bids-standard/bids-specification" target="_blank">github / bids-standard ↗</a>
+    <a href="https://openneuro.org" target="_blank">openneuro.org ↗</a>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <span class="filter-label">Filter by domain:</span>
+  <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+  <button class="filter-btn" onclick="filterCards('mri', this)">MRI</button>
+  <button class="filter-btn" onclick="filterCards('electro', this)">Electrophysiology</button>
+  <button class="filter-btn" onclick="filterCards('nuclear', this)">Nuclear / Metabolic</button>
+  <button class="filter-btn" onclick="filterCards('optical', this)">Optical / Motion</button>
+  <button class="filter-btn" onclick="filterCards('meta', this)">Meta / Cross-modal</button>
+</div>
+
+<div class="main">
+
+  <div class="section-header">
+    <span class="section-title">Core &amp; Modality Specifications</span>
+    <span class="section-count" id="count">15 specifications</span>
+  </div>
+
+  <div class="specs-grid" id="specs-grid">
+
+    <!-- ───── 01  MRI ───── -->
+    <div class="spec-card" data-domain="mri">
+      <div class="spec-card-header">
+        <div class="spec-number">01</div>
+        <div class="spec-header-content">
+          <div class="spec-name">MRI-BIDS</div>
+          <div class="spec-fullname">Magnetic Resonance Imaging (Core Specification)</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2016</span>
+            <span class="tag tag-modal">fMRI · sMRI · DWI · fmap</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetic-resonance-imaging-data.html" target="_blank">bids-specification.readthedocs.io → magnetic-resonance-imaging-data</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">The foundational BIDS specification (Gorgolewski et al., 2016). Defines folder structure, filename entities (subject, session, task, run), and JSON sidecar metadata for all MRI subtypes: anatomical T1w/T2w, functional BOLD fMRI, diffusion-weighted imaging (DWI), field maps, and quantitative MRI. Establishes the naming conventions all other modalities extend.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">fMRIPrep</div><div class="app-desc">Robust preprocessing pipeline for fMRI — motion correction, normalization, confound estimation.</div></div>
+            <div class="app-item"><div class="app-name">MRIQC</div><div class="app-desc">Automated quality control reports for T1w, T2w, and BOLD MRI.</div></div>
+            <div class="app-item"><div class="app-name">QSIPrep / QSIRecon</div><div class="app-desc">Full pipeline for diffusion MRI preprocessing and tractography.</div></div>
+            <div class="app-item"><div class="app-name">FreeSurfer BIDS App</div><div class="app-desc">Cortical surface reconstruction (recon-all) from T1w anatomical data.</div></div>
+            <div class="app-item"><div class="app-name">HCPPipelines</div><div class="app-desc">Minimal preprocessing following Human Connectome Project standards for anat + func + DWI.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">A lab studies working memory. They collect T1w anatomical scans and task-based fMRI runs across 40 participants over two sessions.</div>
+            <ul class="usecase-steps">
+              <li>Convert scanner DICOMs to NIfTI with dcm2niix; organize as <code>sub-01/ses-01/func/sub-01_ses-01_task-nback_run-01_bold.nii.gz</code></li>
+              <li>Add JSON sidecar with TR, task description, slice timing</li>
+              <li>Validate with BIDS Validator → upload to OpenNeuro for sharing</li>
+              <li>Run fMRIPrep for preprocessing; run FitLins for GLM analysis</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro — 1,041 MRI datasets, 46,997 participants</div><a class="repo-link" href="https://openneuro.org/search/modality/mri" target="_blank">openneuro.org/search/modality/mri ↗</a></div></div>
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">UK Biobank (BIDS output via conversion)</div><a class="repo-link" href="https://www.ukbiobank.ac.uk" target="_blank">ukbiobank.ac.uk ↗</a></div></div>
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">Human Connectome Project (HCP)</div><a class="repo-link" href="https://www.humanconnectome.org/study/hcp-young-adult" target="_blank">humanconnectome.org ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 02  EEG ───── -->
+    <div class="spec-card" data-domain="electro">
+      <div class="spec-card-header">
+        <div class="spec-number">02</div>
+        <div class="spec-header-content">
+          <div class="spec-name">EEG-BIDS</div>
+          <div class="spec-fullname">Electroencephalography</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2019</span>
+            <span class="tag tag-modal">EEG · BrainVision · EDF · SET</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electroencephalography.html" target="_blank">bids-specification.readthedocs.io → electroencephalography</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Defines how to store and describe EEG recordings (Pernet et al., 2019). Specifies channels.tsv (electrode labels, types, units), electrodes.tsv (3D coordinates), events.tsv (stimulus onsets), and JSON sidecars (sampling rate, reference, cap manufacturer). Supports BrainVision, EDF, BDF, and EEGLAB .set formats.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">MNE-BIDS</div><div class="app-desc">Python library for reading, writing, and converting EEG/MEG data to BIDS format.</div></div>
+            <div class="app-item"><div class="app-name">EEGLAB (BIDS plugin)</div><div class="app-desc">MATLAB toolbox for EEG processing with BIDS export; supports HED tagging.</div></div>
+            <div class="app-item"><div class="app-name">Connectome Mapper 3</div><div class="app-desc">Full pipeline from raw EEG to parcellated connectivity matrices.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">Cognitive neuroscience lab records 64-channel EEG during a visual oddball paradigm across 30 healthy adults.</div>
+            <ul class="usecase-steps">
+              <li>Export recordings as BrainVision format; place in <code>sub-01/eeg/sub-01_task-oddball_eeg.vhdr</code></li>
+              <li>Create channels.tsv with electrode type (EEG/EOG/ECG) and units (μV)</li>
+              <li>Add events.tsv with onset, duration, trial_type (standard/deviant)</li>
+              <li>Use MNE-Python to load BIDS dataset; run ERP analysis across subjects</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro — 403 EEG datasets, 23,069 participants</div><a class="repo-link" href="https://openneuro.org/search/modality/eeg" target="_blank">openneuro.org/search/modality/eeg ↗</a></div></div>
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">NEMAR (NeuroElectroMagnetic data Archive)</div><a class="repo-link" href="https://nemar.org" target="_blank">nemar.org ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 03  MEG ───── -->
+    <div class="spec-card" data-domain="electro">
+      <div class="spec-card-header">
+        <div class="spec-number">03</div>
+        <div class="spec-header-content">
+          <div class="spec-name">MEG-BIDS</div>
+          <div class="spec-fullname">Magnetoencephalography</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2018</span>
+            <span class="tag tag-modal">MEG · CTF · FIF · 4D</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetoencephalography.html" target="_blank">bids-specification.readthedocs.io → magnetoencephalography</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Extends BIDS for MEG data (Niso et al., 2018). Specifies how to store raw MEG recordings from CTF, Neuromag/Elekta, 4D Neuroimaging, and KIT/Yokogawa systems. Includes channels.tsv, electrodes.tsv, coordsystem.json (for sensor positions and fiducial coordinates), and device-specific metadata. Supports associated head shape digitization data.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">MNE-Python + MNE-BIDS</div><div class="app-desc">Industry-standard MEG/EEG analysis suite with complete BIDS read/write support.</div></div>
+            <div class="app-item"><div class="app-name">Brainstorm</div><div class="app-desc">MATLAB/GUI-based MEG/EEG analysis with BIDS import/export.</div></div>
+            <div class="app-item"><div class="app-name">FieldTrip</div><div class="app-desc">MATLAB toolbox for MEG analysis; BIDS compatible via ft_read_data.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">Researchers at a MEG center record resting-state brain activity from 50 participants on a CTF 275-channel system to study default mode network oscillations.</div>
+            <ul class="usecase-steps">
+              <li>Store raw CTF .ds directories as <code>sub-01/meg/sub-01_task-rest_meg.ds</code></li>
+              <li>Include coordsystem.json specifying fiducial positions (nasion, LPA, RPA) for source localization</li>
+              <li>Run MNE-Python for artifact rejection and beamforming source analysis</li>
+              <li>Share on OpenNeuro; others can download and replicate oscillatory analyses</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro — 58 MEG datasets, 1,491 participants</div><a class="repo-link" href="https://openneuro.org/search/modality/meg" target="_blank">openneuro.org/search/modality/meg ↗</a></div></div>
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">NEMAR MEG Archive</div><a class="repo-link" href="https://nemar.org" target="_blank">nemar.org ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 04  iEEG ───── -->
+    <div class="spec-card" data-domain="electro">
+      <div class="spec-card-header">
+        <div class="spec-number">04</div>
+        <div class="spec-header-content">
+          <div class="spec-name">iEEG-BIDS</div>
+          <div class="spec-fullname">Intracranial Electroencephalography (ECoG / sEEG / DBS)</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2019</span>
+            <span class="tag tag-modal">iEEG · ECoG · sEEG</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/intracranial-electroencephalography.html" target="_blank">bids-specification.readthedocs.io → intracranial-electroencephalography</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Extends BIDS for recordings from electrodes implanted directly on the brain (Holdgraf et al., 2019). Covers electrocorticography (ECoG grid/strip arrays), stereo-EEG depth electrodes (sEEG), and deep brain stimulation (DBS) recordings. Specifies electrode coordinate localization to MRI space, channel types, and clinical vs. research context metadata.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">MNE-BIDS</div><div class="app-desc">Reading and writing iEEG BIDS datasets; electrode visualization on brain surface.</div></div>
+            <div class="app-item"><div class="app-name">iEEGprep (PyEDFlib-based)</div><div class="app-desc">Conversion and preprocessing pipelines for clinical iEEG recordings to BIDS.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">An epilepsy monitoring unit has consented patients with implanted sEEG electrodes; researchers want to study high-frequency oscillations as biomarkers for the seizure onset zone.</div>
+            <ul class="usecase-steps">
+              <li>Export EDF recordings; localize electrode contacts to patient MRI; store in <code>sub-pt01/ieeg/</code></li>
+              <li>electrodes.tsv contains MNI coordinates, hemisphere, size for each contact</li>
+              <li>Researchers across institutions load dataset with MNE; compute HFO rates per electrode</li>
+              <li>Electrode coordinates enable group-level mapping of seizure-generating regions</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro — 71 iEEG datasets, 3,082 participants</div><a class="repo-link" href="https://openneuro.org/search/modality/ieeg" target="_blank">openneuro.org/search/modality/ieeg ↗</a></div></div>
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">MNI Open iEEG Atlas</div><a class="repo-link" href="https://mni-open-ieegatlas.research.mcgill.ca" target="_blank">mni-open-ieegatlas.research.mcgill.ca ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 05  PET ───── -->
+    <div class="spec-card" data-domain="nuclear">
+      <div class="spec-card-header">
+        <div class="spec-number">05</div>
+        <div class="spec-header-content">
+          <div class="spec-name">PET-BIDS</div>
+          <div class="spec-fullname">Positron Emission Tomography</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2022</span>
+            <span class="tag tag-modal">PET · dynamic · static</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/positron-emission-tomography.html" target="_blank">bids-specification.readthedocs.io → positron-emission-tomography</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Defines the organization of PET brain imaging data (Norgaard et al., 2022). Covers 4D dynamic frames, static summation images, blood metabolite data (blood.tsv), and the extensive PET-specific JSON metadata required for kinetic modeling — tracer name, specific activity, molar activity, injection time, scanner type, reconstruction method. Supports co-registered MRI sessions for partial volume correction.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">PETPrep (nipreps)</div><div class="app-desc">Preprocessing pipeline for PET data: motion correction, co-registration to MRI, masking.</div></div>
+            <div class="app-item"><div class="app-name">PETPVC</div><div class="app-desc">PET partial volume correction using structural MRI from the same BIDS dataset.</div></div>
+            <div class="app-item"><div class="app-name">NiftyPAD</div><div class="app-desc">Kinetic modeling (Logan, SRTM) using blood input functions from blood.tsv.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">A neurochemistry lab uses [18F]FDG-PET to measure glucose metabolism in Alzheimer's patients vs. healthy controls.</div>
+            <ul class="usecase-steps">
+              <li>Organize dynamic frames as <code>sub-01/pet/sub-01_trc-18FFDG_pet.nii.gz</code> with full JSON metadata</li>
+              <li>Include blood.tsv with plasma radioactivity measurements over the scan</li>
+              <li>PETPrep aligns PET to T1w MRI; apply Freesurfer parcellation for regional SUVr</li>
+              <li>Download dataset from OpenNeuroPET; run standardized group metabolic analyses</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro PET — 31 datasets, 1,097 participants</div><a class="repo-link" href="https://openneuro.org/search/modality/pet" target="_blank">openneuro.org/search/modality/pet ↗</a></div></div>
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuroPET Database</div><a class="repo-link" href="https://openneuropet.github.io" target="_blank">openneuropet.github.io ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 06  ASL ───── -->
+    <div class="spec-card" data-domain="mri">
+      <div class="spec-card-header">
+        <div class="spec-number">06</div>
+        <div class="spec-header-content">
+          <div class="spec-name">ASL-BIDS</div>
+          <div class="spec-fullname">Arterial Spin Labeling</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2022</span>
+            <span class="tag tag-modal">ASL · PCASL · PASL · CBF</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetic-resonance-imaging-data.html#arterial-spin-labeling" target="_blank">bids-specification.readthedocs.io → arterial-spin-labeling</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Defines structure for ASL-MRI perfusion data (Clement et al., 2022). ASL uses magnetically labeled blood water as an endogenous tracer to measure cerebral blood flow (CBF) non-invasively. The spec covers PCASL, PASL, and VSASL acquisition types; specifies the aslcontext.tsv (labeling the role of each volume: label, control, m0scan) and mandatory JSON fields for post-labeling delay, bolus duration, and background suppression.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">ASLPrep (PennLINC)</div><div class="app-desc">Complete ASL preprocessing and CBF quantification pipeline; BIDS-App format.</div></div>
+            <div class="app-item"><div class="app-name">ExploreASL</div><div class="app-desc">Multi-center ASL analysis with BIDS import; outputs CBF maps and QC reports.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">A stroke research group measures cerebral blood flow in 25 patients at 1 week and 3 months post-stroke to track perfusion recovery.</div>
+            <ul class="usecase-steps">
+              <li>Store PCASL series as <code>sub-01/perf/sub-01_asl.nii.gz</code> with aslcontext.tsv</li>
+              <li>Run ASLPrep → output quantitative CBF maps in mL/100g/min</li>
+              <li>Compare CBF in affected vs. unaffected hemispheres across sessions</li>
+              <li>Longitudinal BIDS structure (ses-week1, ses-month3) enables automated comparison</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro ASL datasets (search "ASL")</div><a class="repo-link" href="https://openneuro.org" target="_blank">openneuro.org ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 07  NIRS ───── -->
+    <div class="spec-card" data-domain="optical">
+      <div class="spec-card-header">
+        <div class="spec-number">07</div>
+        <div class="spec-header-content">
+          <div class="spec-name">NIRS-BIDS</div>
+          <div class="spec-fullname">Near-Infrared Spectroscopy (fNIRS)</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2025</span>
+            <span class="tag tag-modal">fNIRS · HbO · HbR</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/near-infrared-spectroscopy.html" target="_blank">bids-specification.readthedocs.io → near-infrared-spectroscopy</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Defines storage for functional near-infrared spectroscopy data (Luke et al., 2025). fNIRS measures hemodynamic changes via light absorption at the scalp, capturing oxygenated and deoxygenated hemoglobin signals. The spec covers raw optical density data, preprocessed HbO/HbR concentrations, optode geometry (optodes.tsv), channel source-detector pairings, and wavelength-specific metadata. Uses SNIRF format as primary file type.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">MNE-NIRS</div><div class="app-desc">Python library for fNIRS analysis; full BIDS-NIRS read support.</div></div>
+            <div class="app-item"><div class="app-name">Homer3 / AtlasViewer</div><div class="app-desc">MATLAB toolbox for fNIRS preprocessing and cortical projection with BIDS export.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">Developmental neuroscientists study language processing in 6-month-old infants using 52-channel fNIRS (EEG is impractical; MRI is impossible in awake infants).</div>
+            <ul class="usecase-steps">
+              <li>Record in SNIRF format; store as <code>sub-infant01/nirs/sub-infant01_task-speech_nirs.snirf</code></li>
+              <li>optodes.tsv encodes source and detector positions relative to standard infant head landmarks</li>
+              <li>MNE-NIRS loads dataset; apply GLM to detect HbO increases in temporal regions to speech</li>
+              <li>Share on OpenNeuro (23 NIRS datasets available); others replicate developmental findings</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro NIRS — 23 datasets, 528 participants</div><a class="repo-link" href="https://openneuro.org/search/modality/nirs" target="_blank">openneuro.org/search/modality/nirs ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 08  Microscopy ───── -->
+    <div class="spec-card" data-domain="optical">
+      <div class="spec-card-header">
+        <div class="spec-number">08</div>
+        <div class="spec-header-content">
+          <div class="spec-name">Microscopy-BIDS</div>
+          <div class="spec-fullname">Microscopy &amp; Histology</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2022</span>
+            <span class="tag tag-modal">TEM · SEM · 2P · histology</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/microscopy.html" target="_blank">bids-specification.readthedocs.io → microscopy</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Extends BIDS to microscopy and histology imaging (Bourget et al., 2022). Covers 2D/3D images acquired by optical microscopy, electron microscopy (TEM/SEM), two-photon imaging, and light-sheet fluorescence microscopy. Specifies chunk-based storage for large 3D volumes, staining metadata (e.g. MBP antibody, DAPI), spatial resolution, pixel size, and sample preparation details — bridging the gap between micro-scale and macro-scale brain atlases.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">NeuroGlancer / Neuroglancer</div><div class="app-desc">Web-based viewer for large-scale microscopy volumes compatible with BIDS microscopy organization.</div></div>
+            <div class="app-item"><div class="app-name">ImageJ / FIJI</div><div class="app-desc">Open-source image analysis; BIDS microscopy metadata helps automate batch pipelines.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">A connectomics lab acquired serial electron microscopy volumes of mouse cortex to map synaptic connectivity at nanoscale resolution.</div>
+            <ul class="usecase-steps">
+              <li>Store TEM sections as OME-TIFF tiles; organize as <code>sub-mouse01/micr/sub-mouse01_sample-cortex_TEM.ome.tiff</code></li>
+              <li>JSON sidecar records pixel size (4 nm/px), staining protocol, z-step size</li>
+              <li>Researchers download and run automated synapse segmentation</li>
+              <li>Facilitates cross-species comparison with human connectome datasets</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">DANDI Archive (neurophysiology + microscopy)</div><a class="repo-link" href="https://dandiarchive.org" target="_blank">dandiarchive.org ↗</a></div></div>
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro Microscopy examples</div><a class="repo-link" href="https://openneuro.org" target="_blank">openneuro.org ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 09  qMRI ───── -->
+    <div class="spec-card" data-domain="mri">
+      <div class="spec-card-header">
+        <div class="spec-number">09</div>
+        <div class="spec-header-content">
+          <div class="spec-name">qMRI-BIDS</div>
+          <div class="spec-fullname">Quantitative MRI</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2022</span>
+            <span class="tag tag-modal">T1 · T2 · MTR · MWF · MP2RAGE</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/appendices/qmri.html" target="_blank">bids-specification.readthedocs.io → appendices/qmri</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Extends BIDS for quantitative MRI data (Karakuzu et al., 2022). Unlike conventional MRI (arbitrary signal intensity), qMRI produces maps of biophysical parameters: T1 relaxation, T2/T2*, magnetization transfer ratio (MTR), myelin water fraction (MWF), and proton density. The spec defines how to store the multi-contrast input series, inversion time arrays, and the resulting quantitative maps in a standardized way that enables reproducibility across scanners.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">qMRLab</div><div class="app-desc">MATLAB/Python toolbox for qMRI fitting; native BIDS qMRI input/output.</div></div>
+            <div class="app-item"><div class="app-name">hMRI Toolbox (SPM)</div><div class="app-desc">SPM extension for multi-parameter mapping and myelin water imaging from BIDS data.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">Multiple sclerosis researchers track myelin changes longitudinally using MP2RAGE T1 mapping across 3 sites with different 3T scanners.</div>
+            <ul class="usecase-steps">
+              <li>Store UNI, INV1, INV2 MP2RAGE volumes with inversion times in JSON; organize by session</li>
+              <li>qMRLab fits T1 maps; results stored as BIDS derivatives</li>
+              <li>Cross-site harmonization is feasible because absolute T1 values are scanner-independent</li>
+              <li>Longitudinal decrease in T1 correlates with remyelination after treatment</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro qMRI datasets (search "MP2RAGE" / "MTR")</div><a class="repo-link" href="https://openneuro.org" target="_blank">openneuro.org ↗</a></div></div>
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OSF (Open Science Framework) — qMRI datasets</div><a class="repo-link" href="https://osf.io" target="_blank">osf.io ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 10  Motion ───── -->
+    <div class="spec-card" data-domain="optical">
+      <div class="spec-card-header">
+        <div class="spec-number">10</div>
+        <div class="spec-header-content">
+          <div class="spec-name">Motion-BIDS</div>
+          <div class="spec-fullname">Motion Capture Data</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2024</span>
+            <span class="tag tag-modal">motion · IMU · optical · gait</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/motion.html" target="_blank">bids-specification.readthedocs.io → motion</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Extends BIDS for body motion data (Jeung et al., 2024). Covers positional and orientation data from optical motion capture systems, inertial measurement units (IMUs/accelerometers/gyroscopes), and electromagnetic tracking. Enables synchronized storage of kinematic data alongside EEG, fMRI, or other neural recordings — critical for mobile brain-body imaging paradigms. Channels defined by tracked body part and measurement type (position, velocity, angle).</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">MNE-BIDS (motion extension)</div><div class="app-desc">Supports reading synchronized EEG + motion BIDS datasets.</div></div>
+            <div class="app-item"><div class="app-name">mobilab (EEGLAB plugin)</div><div class="app-desc">Mobile brain-body imaging analysis; motion + EEG co-analysis with BIDS support.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">Gait researchers study the neural correlates of freezing of gait in Parkinson's patients using simultaneous 64-channel EEG and full-body motion capture.</div>
+            <ul class="usecase-steps">
+              <li>Store IMU data (3-axis acceleration, 3-axis gyroscope) per body segment as <code>sub-01/motion/</code></li>
+              <li>EEG stored in parallel under <code>sub-01/eeg/</code>; synchronized by shared events.tsv</li>
+              <li>Detect freezing episodes from motion channels; align with EEG spectral signatures</li>
+              <li>Multi-site dataset reproducible because motion and EEG share BIDS event definitions</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro Motion — 20 datasets</div><a class="repo-link" href="https://openneuro.org" target="_blank">openneuro.org ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 11  MRS ───── -->
+    <div class="spec-card" data-domain="mri">
+      <div class="spec-card-header">
+        <div class="spec-number">11</div>
+        <div class="spec-header-content">
+          <div class="spec-name">MRS-BIDS</div>
+          <div class="spec-fullname">Magnetic Resonance Spectroscopy</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2025</span>
+            <span class="tag tag-modal">MRS · MRSI · metabolites</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/magnetic-resonance-spectroscopy.html" target="_blank">bids-specification.readthedocs.io → magnetic-resonance-spectroscopy</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Defines storage for MR spectroscopy data (Bouchard et al., 2025). MRS measures chemical concentrations (NAA, Glx, GABA, Cr, Cho) within a defined brain voxel or multi-voxel grid. The spec covers single-voxel spectroscopy (SVS) and chemical shift imaging (MRSI); specifies voxel location relative to structural MRI, acquisition parameters (echo time, sequence), and supporting water reference scans. Uses NIfTI-MRS format.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">Osprey</div><div class="app-desc">MATLAB-based MRS processing (preprocessing, fitting, quantification) with BIDS-MRS output.</div></div>
+            <div class="app-item"><div class="app-name">FSL-MRS</div><div class="app-desc">Python-based MRS analysis pipeline; reads and writes BIDS-MRS datasets natively.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">Psychiatry researchers measure GABA+ and glutamate concentrations in the anterior cingulate cortex in depression vs. controls using MEGA-PRESS MRS.</div>
+            <ul class="usecase-steps">
+              <li>Store edited MRS data as <code>sub-01/mrs/sub-01_voi-ACC_svs.nii.mrs</code> with voxel position</li>
+              <li>Water reference scan stored alongside for absolute quantification</li>
+              <li>Osprey processes BIDS dataset → outputs metabolite tables per subject</li>
+              <li>Multi-center BIDS MRS datasets enable meta-analysis of GABA deficits in depression</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">MRSHub Dataset Repository</div><a class="repo-link" href="https://www.mrshub.org/datasets" target="_blank">mrshub.org/datasets ↗</a></div></div>
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OSF MRS Datasets</div><a class="repo-link" href="https://osf.io" target="_blank">osf.io ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 12  EMG ───── -->
+    <div class="spec-card" data-domain="electro">
+      <div class="spec-card-header">
+        <div class="spec-number">12</div>
+        <div class="spec-header-content">
+          <div class="spec-name">EMG-BIDS</div>
+          <div class="spec-fullname">Electromyography</div>
+          <div class="spec-tags">
+            <span class="tag tag-modal">EMG · surface · needle</span>
+            <span class="tag tag-year">Publication forthcoming</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/electromyography.html" target="_blank">bids-specification.readthedocs.io → electromyography</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Extends BIDS for electromyography recordings from skeletal muscles. Covers surface EMG (non-invasive electrode patches) and needle/wire EMG (invasive intramuscular). The spec defines electrode placement metadata (muscle name, recording site, electrode type), recording parameters (sampling rate, bandpass filter), and how to link EMG to simultaneously recorded neural signals (EEG, iEEG) or motion capture data. Particularly relevant for motor neuroscience, rehabilitation, and clinical neurophysiology.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">MNE-Python (EMG channel support)</div><div class="app-desc">Reads EMG channels from BrainVision and EDF files alongside EEG in unified BIDS datasets.</div></div>
+            <div class="app-item"><div class="app-name">mobilab (EEG-EMG co-analysis)</div><div class="app-desc">Mobile brain-body imaging toolbox for concurrent EEG and EMG analysis.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">Motor control researchers study corticomuscular coherence — the coupling between EEG motor cortex rhythms and forearm muscle EMG — during precision grip tasks.</div>
+            <ul class="usecase-steps">
+              <li>Record 64-ch EEG + 8-ch surface EMG simultaneously; store under <code>sub-01/eeg/</code> with EMG channels labeled in channels.tsv</li>
+              <li>channels.tsv marks type as "EMG", muscle as "flexor_digitorum_superficialis"</li>
+              <li>MNE-Python computes coherence spectrum between EEG-C3 and forearm EMG at 20 Hz</li>
+              <li>Standardized metadata enables comparison across labs studying motor dysfunction</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">PhysioNet (motor control + EMG)</div><a class="repo-link" href="https://physionet.org" target="_blank">physionet.org ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 13  Genetics ───── -->
+    <div class="spec-card" data-domain="meta">
+      <div class="spec-card-header">
+        <div class="spec-number">13</div>
+        <div class="spec-header-content">
+          <div class="spec-name">Genetics-BIDS</div>
+          <div class="spec-fullname">Genetics Descriptor Extension</div>
+          <div class="spec-tags">
+            <span class="tag tag-pub">Published 2020</span>
+            <span class="tag tag-modal">SNP · genotype · genomics</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/genetic-descriptor.html" target="_blank">bids-specification.readthedocs.io → genetic-descriptor</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Defines how to link genetic data to imaging data within a BIDS dataset (Moreau et al., 2020). Does not define the genetic file formats themselves, but specifies a genetic_info.json and participants.tsv extension pointing to external repositories (dbGaP, EGA). Enables brain imaging datasets to include genetic descriptors (SNP arrays, whole genome sequencing accession IDs) while respecting consent constraints and controlled-access requirements for genetic information.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">PyBIDS + PLINK</div><div class="app-desc">Use PyBIDS to access imaging phenotypes; PLINK for GWAS analysis using linked genetics.</div></div>
+            <div class="app-item"><div class="app-name">OpenSNP / dbGaP integration</div><div class="app-desc">Genetics-BIDS enables tracing imaging datasets back to controlled-access genotype repositories.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">An imaging genetics study examines whether APOE ε4 carrier status affects hippocampal volume in 800 adults from the ADNI cohort.</div>
+            <ul class="usecase-steps">
+              <li>MRI data organized in BIDS; genetic_info.json points to dbGaP accession phs000572</li>
+              <li>participants.tsv includes APOE genotype status (approved disclosure)</li>
+              <li>Researchers apply freesurfer BIDS App → extract hippocampal volume per subject</li>
+              <li>Regression analysis: APOE ε4 × hippocampal volume controlling for age and sex</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">ADNI (Alzheimer's Disease Neuroimaging Initiative)</div><a class="repo-link" href="https://adni.loni.usc.edu" target="_blank">adni.loni.usc.edu ↗</a></div></div>
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">UK Biobank Imaging + Genetics</div><a class="repo-link" href="https://www.ukbiobank.ac.uk" target="_blank">ukbiobank.ac.uk ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 14  Physiological ───── -->
+    <div class="spec-card" data-domain="meta">
+      <div class="spec-card-header">
+        <div class="spec-number">14</div>
+        <div class="spec-header-content">
+          <div class="spec-name">Physio-BIDS</div>
+          <div class="spec-fullname">Physiological Recordings</div>
+          <div class="spec-tags">
+            <span class="tag tag-modal">cardiac · respiratory · GSR · pupil</span>
+            <span class="tag tag-modal">core spec</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/physiological-recordings.html" target="_blank">bids-specification.readthedocs.io → physiological-recordings</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Part of the core specification — defines how to store physiological measurements recorded concurrently with MRI or other brain imaging. Covers cardiac (pulse oximetry, ECG), respiratory (respiration belt), galvanic skin response (GSR), eye tracking (pupil diameter, gaze position), and any custom continuous signal. Uses compressed TSV format with JSON sidecar specifying channels, sampling frequency, and start time relative to the imaging acquisition.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">phys2bids</div><div class="app-desc">Converts physiological data from AcqKnowledge, Labchart, etc. to BIDS physio format.</div></div>
+            <div class="app-item"><div class="app-name">fMRIPrep (physio confound)</div><div class="app-desc">Uses BIDS physio files to compute cardiac/respiratory noise regressors (RETROICOR).</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">An fMRI lab records heart rate and respiration simultaneously with resting-state BOLD to model physiological noise and study autonomic-neural coupling.</div>
+            <ul class="usecase-steps">
+              <li>Export physio traces; store as <code>sub-01/func/sub-01_task-rest_physio.tsv.gz</code></li>
+              <li>JSON sidecar: SamplingFrequency=2000, StartTime=-12, Columns=["cardiac","respiratory"]</li>
+              <li>fMRIPrep automatically reads physio file → computes RETROICOR regressors</li>
+              <li>Cardiac-cycle phase modulates resting-state network connectivity — cleanly testable</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro datasets with physio (many fMRI datasets include physio)</div><a class="repo-link" href="https://openneuro.org" target="_blank">openneuro.org ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───── 15  Behavioral ───── -->
+    <div class="spec-card" data-domain="meta">
+      <div class="spec-card-header">
+        <div class="spec-number">15</div>
+        <div class="spec-header-content">
+          <div class="spec-name">Behavioral-BIDS</div>
+          <div class="spec-fullname">Behavioral Experiments (no neural recording)</div>
+          <div class="spec-tags">
+            <span class="tag tag-modal">behavioral · psychophysics · cognitive</span>
+            <span class="tag tag-modal">core spec</span>
+          </div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content">
+            <a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/modality-specific-files/behavioral-experiments.html" target="_blank">bids-specification.readthedocs.io → behavioral-experiments</a>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Defines structure for purely behavioral experiments — those without concurrent neural imaging. Stores trial-by-trial response logs, reaction times, accuracy, and task metadata in events.tsv format. Enables linking behavioral phenotypes to separately acquired imaging data via the shared BIDS participants.tsv. Supports longitudinal cognitive assessments and multi-session task batteries. The phenotypic data extension additionally covers questionnaire, neuropsychological test, and demographic data.</div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Key Apps &amp; Tools</div>
+          <div class="apps-list">
+            <div class="app-item"><div class="app-name">PyBIDS</div><div class="app-desc">Python library to query BIDS datasets programmatically; load behavioral events from all tasks/subjects.</div></div>
+            <div class="app-item"><div class="app-name">FitLins</div><div class="app-desc">Uses BIDS behavioral events + imaging derivatives to fit linear models (GLMs) across subjects.</div></div>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Use Case — Example</div>
+          <div class="usecase-block">
+            <div class="usecase-scenario">A large online study collects reaction time data from 2,000 participants across 5 cognitive tasks, linked to a subgroup who also completed fMRI.</div>
+            <ul class="usecase-steps">
+              <li>Store task logs as <code>sub-001/beh/sub-001_task-flanker_beh.tsv</code> with RT, accuracy, congruency</li>
+              <li>participants.tsv links all 2,000 subjects; fMRI subgroup has additional func/ folders</li>
+              <li>PyBIDS queries all behavioral files → compute drift diffusion model fits at scale</li>
+              <li>DDM parameters (drift rate) correlated with BOLD activation in fMRI subgroup</li>
+            </ul>
+          </div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">Data Repositories</div>
+          <div class="repos-list">
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OpenNeuro (many datasets include beh/)</div><a class="repo-link" href="https://openneuro.org" target="_blank">openneuro.org ↗</a></div></div>
+            <div class="repo-item"><span class="repo-bullet">■</span><div class="repo-content"><div class="repo-name">OSF (Open Science Framework)</div><a class="repo-link" href="https://osf.io" target="_blank">osf.io ↗</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /specs-grid -->
+
+  <hr class="section-divider">
+
+  <!-- CROSS-CUTTING RESOURCES -->
+  <div class="section-header">
+    <span class="section-title">Cross-Cutting Standards &amp; Infrastructure</span>
+  </div>
+
+  <div class="specs-grid">
+
+    <div class="spec-card" data-domain="meta">
+      <div class="spec-card-header">
+        <div class="spec-number">★</div>
+        <div class="spec-header-content">
+          <div class="spec-name">BIDS Derivatives</div>
+          <div class="spec-fullname">Processed / Derived Data Standard</div>
+          <div class="spec-tags"><span class="tag tag-modal">preprocessed · maps · labels · atlases</span></div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content"><a class="spec-link" href="https://bids-specification.readthedocs.io/en/stable/derivatives/introduction.html" target="_blank">bids-specification.readthedocs.io → derivatives</a></div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Defines how to store outputs of BIDS-App pipelines in a standardized way — preprocessed images, statistical maps, parcellations, connectivity matrices, and quality control reports. Uses <code>derivatives/</code> folder with pipeline provenance encoded in dataset_description.json. Allows chaining of analysis pipelines while maintaining full reproducibility.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-card" data-domain="meta">
+      <div class="spec-card-header">
+        <div class="spec-number">★</div>
+        <div class="spec-header-content">
+          <div class="spec-name">BIDS Stats Model</div>
+          <div class="spec-fullname">Statistical Modeling Specification</div>
+          <div class="spec-tags"><span class="tag tag-modal">GLM · contrasts · group analysis</span></div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content"><a class="spec-link" href="https://bids.neuroimaging.io/standards/bids_stats_model/index.html" target="_blank">bids.neuroimaging.io → bids_stats_model</a></div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Defines a JSON-based specification for statistical models applied to BIDS neuroimaging data. Describes design matrices, HRF convolutions, contrast definitions, and group-level specifications in a software-agnostic way. Used by FitLins to produce FSL/SPM/nistats-compatible GLM analyses from a single model JSON file — enabling replication across software packages.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-card" data-domain="meta">
+      <div class="spec-card-header">
+        <div class="spec-number">★</div>
+        <div class="spec-header-content">
+          <div class="spec-name">BIDS Validator</div>
+          <div class="spec-fullname">Dataset Integrity Validation Tool</div>
+          <div class="spec-tags"><span class="tag tag-modal">all modalities</span></div>
+        </div>
+      </div>
+      <div class="spec-card-body">
+        <div class="spec-section">
+          <div class="spec-section-label">Source / Spec URL</div>
+          <div class="spec-section-content"><a class="spec-link" href="https://bids-standard.github.io/bids-validator/" target="_blank">bids-standard.github.io/bids-validator ↗ (web app)</a></div>
+        </div>
+        <div class="spec-section">
+          <div class="spec-section-label">What it does</div>
+          <div class="spec-section-content">Checks any BIDS dataset for compliance with the specification. Validates folder structure, file naming, required JSON fields, TSV column headers, and cross-file consistency. Available as a web app (drag &amp; drop), npm package, Python package, or Docker image. Required by OpenNeuro for all uploads.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /main -->
+
+<footer>
+  <div>BIDS Specification v1.11.1 · <a href="https://bids-specification.readthedocs.io" target="_blank">Full Docs ↗</a></div>
+  <div>Starborn/BIDS Repo · <a href="https://github.com/Starborn/BIDS" target="_blank">github.com/Starborn/BIDS ↗</a></div>
+  <div>Data via <a href="https://openneuro.org" target="_blank">OpenNeuro</a> · <a href="https://nemar.org" target="_blank">NEMAR</a> · <a href="https://dandiarchive.org" target="_blank">DANDI</a></div>
+  <div>CC BY 4.0 · BIDS Contributors</div>
+</footer>
+
+<script>
+  function filterCards(domain, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cards = document.querySelectorAll('.spec-card');
+    let visible = 0;
+    cards.forEach(card => {
+      if (domain === 'all' || card.dataset.domain === domain) {
+        card.classList.remove('hidden');
+        visible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    const countEl = document.getElementById('count');
+    if (countEl) {
+      const total = document.querySelectorAll('#specs-grid .spec-card').length;
+      countEl.textContent = domain === 'all'
+        ? `${total} specifications`
+        : `${visible} specification${visible !== 1 ? 's' : ''} shown`;
+    }
+  }
+</script>
+</body>
+</html>
